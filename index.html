@@ -6,6 +6,11 @@
 <title>City Simulator</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body, #gameScreen, #mapWrap, #hud, #panel, #tabbar, #log, #questBanner { -webkit-user-select: none; user-select: none; }
+  input, textarea { -webkit-user-select: text; user-select: text; }
+  .bldg.rising .ic { animation: riseIn .5s ease-out; transform-origin: bottom center; }
+  @keyframes riseIn { from { transform: scaleY(.15); opacity: .4; } to { transform: scaleY(1); opacity: 1; } }
+  .bldg .frame { font-size: 15px; line-height: 1; }
   body { font-family: system-ui, -apple-system, sans-serif; background: #1a2f1a; color: #f2f2e9; overflow-x: hidden; }
   button { font-family: inherit; cursor: pointer; border: none; border-radius: 10px; padding: 8px 12px; font-size: 14px; background: #3f6212; color: #fff; }
   button:active { transform: scale(.97); }
@@ -232,7 +237,7 @@ function newGame(cityName){
     questIdx: 0, questsDone: {}, raidsSurvived: 0, log: [], speed: 1, manualJobs: false, jobCounts: {}, raidIn: 10, bornTotal: 0 };
   S = s;
   for (let i = 0; i < 6; i++) s.people.push(newPerson(19 + Math.floor(Math.random()*22)));
-  for (let i = 0; i < 3; i++) s.buildings.push({ id: uidC++, type: "tent", x: 18 + i*16, y: 66 + (i%2)*10, building: false, progress: 1, tier: 0 });
+  for (let i = 0; i < 3; i++) s.buildings.push({ id: uidC++, type: "tent", x: 10 + i*11, y: 63, building: false, progress: 1, tier: 0 });
   assignHomes(); autoJobs();
   log("🏕️ " + cityName + " is founded with 6 people and 3 tents.");
   return s;
@@ -470,6 +475,10 @@ const personEls = new Map(), bldgEls = new Map();
 function renderMap(){
   if (!S) return;
   const wrap = $("mapWrap");
+  // neat streets under the building rows
+  if (!wrap.querySelector(".street")) {
+    [68, 80, 92].forEach(y => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;left:0;right:0;top:" + y + "%;height:7px;background:rgba(90,74,52,.55);border-top:1px dashed rgba(255,255,255,.35);border-bottom:1px dashed rgba(255,255,255,.35);pointer-events:none"; wrap.appendChild(st); });
+  }
   // buildings
   const seenB = new Set();
   S.buildings.forEach(b => {
@@ -478,7 +487,12 @@ function renderMap(){
     if (!el) { el = document.createElement("div"); el.className = "bldg"; bldgEls.set(b.id, el); wrap.appendChild(el); }
     el.style.left = b.x + "%"; el.style.top = b.y + "%";
     const d = BUILDINGS[b.type];
-    el.innerHTML = '<div class="ic" style="' + (d.big ? "font-size:42px" : "") + '">' + (b.building ? "🚧" : d.icon) + '</div><div class="lb">' + esc(d.name) + "</div>" + (b.building ? '<div class="prog"><i style="width:' + Math.round(b.progress*100) + '%"></i></div>' : "");
+    if (b.building) {
+      const grow = 0.15 + 0.85 * (b.progress || 0);
+      el.innerHTML = '<div class="ic" style="transform: scaleY(' + grow.toFixed(2) + '); transform-origin: bottom center; opacity:' + (0.35 + 0.65 * (b.progress || 0)).toFixed(2) + '">' + d.icon + '</div><div class="frame">🏗️ building up…</div><div class="lb">' + esc(d.name) + '</div><div class="prog"><i style="width:' + Math.round(b.progress*100) + '%"></i></div>';
+    } else {
+      el.innerHTML = '<div class="ic" style="' + (d.big ? "font-size:42px" : "") + '">' + d.icon + '</div><div class="lb">' + esc(d.name) + "</div>";
+    }
   });
   bldgEls.forEach((el, id) => { if (!seenB.has(id)) { el.remove(); bldgEls.delete(id); } });
   // people
@@ -587,9 +601,13 @@ function personCard(p){
 function queueBuild(t){
   const d = BUILDINGS[t]; if (!canAfford(d.cost)) { toast("Not enough resources"); return; }
   payCost(d.cost);
-  const spots = [[14,64],[30,72],[46,63],[62,72],[78,64],[22,82],[55,84],[84,82],[38,86],[70,86]];
-  const used = S.buildings.length % spots.length;
-  S.buildings.push({ id: uidC++, type: t, x: spots[used][0], y: spots[used][1], building: true, progress: 0, tier: d.tier || 0 });
+  // organized town: buildings line up in neat rows along three streets
+  const rows = [63, 75, 87], cols = [10, 21, 32, 43, 54, 65, 76, 87];
+  const taken = new Set(S.buildings.map(b => Math.round(b.x) + "," + Math.round(b.y)));
+  let spot = null;
+  for (const ry of rows) { for (const cx of cols) { if (!taken.has(cx + "," + ry)) { spot = [cx, ry]; break; } } if (spot) break; }
+  if (!spot) spot = [8 + (S.buildings.length * 7) % 84, rows[S.buildings.length % 3]];
+  S.buildings.push({ id: uidC++, type: t, x: spot[0], y: spot[1], building: true, progress: 0, tier: d.tier || 0 });
   toast("🚧 " + d.name + " queued!"); if (!alive().some(p => p.job === "builder")) autoJobs(); saveGame(false); renderAll();
 }
 function queueUpgrade(id, up){
