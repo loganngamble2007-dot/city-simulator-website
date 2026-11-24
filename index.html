@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>City Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body, #gameScreen, #mapWrap, #hud, #panel, #tabbar, #log, #questBanner { -webkit-user-select: none; user-select: none; }
@@ -11,69 +13,74 @@
   .bldg.rising .ic { animation: riseIn .5s ease-out; transform-origin: bottom center; }
   @keyframes riseIn { from { transform: scaleY(.15); opacity: .4; } to { transform: scaleY(1); opacity: 1; } }
   .bldg .frame { font-size: 15px; line-height: 1; }
-  body { font-family: system-ui, -apple-system, sans-serif; background: #1a2f1a; color: #f2f2e9; overflow-x: hidden; }
-  button { font-family: inherit; cursor: pointer; border: none; border-radius: 10px; padding: 8px 12px; font-size: 14px; background: #3f6212; color: #fff; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #141210; color: #fef3c7; overflow-x: hidden; }
+  h1, #hud .cityname { font-family: "Baloo 2", system-ui, sans-serif; }
+  button { font-family: inherit; cursor: pointer; border: 1px solid #453a2e; border-radius: 10px; padding: 8px 12px; font-size: 14px; background: #f59e0b; color: #231303; font-weight: 700; }
   button:active { transform: scale(.97); }
   button:disabled { opacity: .45; cursor: default; }
-  .btn-alt { background: #57534e; }
+  .btn-alt { background: #2e2721; color: #fef3c7; }
   .btn-danger { background: #991b1b; }
   .btn-blue { background: #1d4ed8; }
   h1 { font-size: 26px; }
   /* ---------- Files screen ---------- */
-  #filesScreen { max-width: 560px; margin: 0 auto; padding: 28px 16px 60px; }
+  #filesScreen { max-width: 480px; margin: 0 auto; padding: 28px 16px 60px; }
   #filesScreen h1 { text-align: center; margin-bottom: 4px; }
-  #filesScreen .sub { text-align: center; opacity: .8; margin-bottom: 22px; font-size: 14px; }
-  .slot { background: #243824; border: 2px solid #3f6212; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+  #filesScreen .sub { text-align: center; color: #c9b896; margin-bottom: 22px; font-size: 14px; }
+  .filepill { background: #f59e0b; color: #231303; border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 800; letter-spacing: .4px; }
+  .slot { background: #221d18; border: 2px solid #453a2e; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
   .slot .slot-title { font-size: 17px; font-weight: 700; }
   .slot .slot-meta { font-size: 13px; opacity: .85; margin: 3px 0 10px; }
   .slot .row { display: flex; gap: 8px; flex-wrap: wrap; }
-  .slot input { flex: 1; min-width: 140px; padding: 8px 10px; border-radius: 10px; border: 1px solid #3f6212; background: #16241a; color: #fff; font-size: 14px; }
+  .slot input { flex: 1; min-width: 140px; padding: 8px 10px; border-radius: 10px; border: 1px solid #453a2e; background: #141210; color: #fef3c7; font-size: 14px; }
   .note { font-size: 12px; opacity: .7; text-align: center; margin-top: 14px; line-height: 1.5; }
   /* ---------- Game layout ---------- */
   #gameScreen { display: none; max-width: 900px; margin: 0 auto; padding-bottom: 86px; }
-  #hud { position: sticky; top: 0; z-index: 30; background: #16241a; border-bottom: 2px solid #3f6212; padding: 8px 10px; }
+  #hud { position: sticky; top: 0; z-index: 30; background: #221d18; border-bottom: 2px solid #453a2e; padding: 8px 10px; }
+  .spdbtn { background: #2e2721; color: #c9b896; border: 1px solid #453a2e; border-radius: 999px; padding: 3px 10px; font-size: 12.5px; font-weight: 600; }
+  .spdbtn.filesb { background: #f59e0b; color: #231303; font-weight: 800; }
+  .mbtn { width: 38px; height: 38px; border-radius: 50%; background: rgba(34,29,24,.92); color: #fef3c7; border: 1px solid #453a2e; font-size: 18px; padding: 0; line-height: 1; }
   #hud .cityline { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
   #hud .cityname { font-weight: 800; font-size: 17px; }
   #hud .yearline { font-size: 13px; opacity: .9; }
   #resbar { display: flex; gap: 6px; overflow-x: auto; padding: 8px 2px 2px; scrollbar-width: none; }
   #resbar::-webkit-scrollbar { display: none; }
-  .chip { background: #243824; border: 1px solid #3f6212; border-radius: 999px; padding: 4px 10px; font-size: 13px; white-space: nowrap; }
+  .chip { background: #2e2721; border: 1px solid #453a2e; border-radius: 999px; padding: 4px 10px; font-size: 13px; white-space: nowrap; color: #fef3c7; }
   .chip.low { border-color: #dc2626; color: #fca5a5; }
-  #questBanner { background: #3b2f10; border-bottom: 1px solid #a16207; padding: 7px 12px; font-size: 13px; }
-  #mapWrap { position: relative; height: 46vh; min-height: 300px; overflow: hidden; transition: background 1s; }
-  #mapWrap.day { background: linear-gradient(#7ec8e3 0 55%, #5da24a 55% 100%); }
-  #mapWrap.dusk { background: linear-gradient(#f2a65a 0 55%, #4c7a3f 55% 100%); }
-  #mapWrap.night { background: linear-gradient(#16233f 0 55%, #24402a 55% 100%); }
+  #questBanner { background: #2563eb; color: #fff; border-bottom: 1px solid #1e40af; padding: 7px 12px; font-size: 13px; }
+  #mapWrap { position: relative; height: 62vh; min-height: 380px; overflow: hidden; transition: background 1s; }
+  #mapWrap.day { background: linear-gradient(#79b657, #4e8f3a); }
+  #mapWrap.dusk { background: linear-gradient(#c98a3d, #4c7a3f); }
+  #mapWrap.night { background: linear-gradient(#22331f, #16241a); }
   .deco { position: absolute; font-size: 22px; opacity: .9; pointer-events: none; }
   .bldg { position: absolute; transform: translate(-50%,-80%); text-align: center; pointer-events: none; }
   .bldg .ic { font-size: 30px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
-  .bldg .lb { font-size: 9px; background: rgba(0,0,0,.45); color: #fff; border-radius: 6px; padding: 1px 4px; margin-top: -2px; }
+  .bldg .lb { font-size: 9px; background: rgba(20,18,16,.75); color: #fef3c7; border-radius: 6px; padding: 1px 4px; margin-top: -2px; }
   .bldg .prog { width: 44px; height: 5px; background: rgba(0,0,0,.5); border-radius: 3px; margin: 2px auto 0; overflow: hidden; }
-  .bldg .prog i { display: block; height: 100%; background: #facc15; }
+  .bldg .prog i { display: block; height: 100%; background: #f59e0b; }
   .person { position: absolute; transform: translate(-50%,-90%); text-align: center; transition: left .9s linear, top .9s linear; pointer-events: none; z-index: 5; }
   .person .ic { font-size: 20px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.5)); }
-  .person .nm { font-size: 8px; background: rgba(0,0,0,.45); color: #fff; border-radius: 5px; padding: 0 3px; }
+  .person .nm { font-size: 8px; background: rgba(20,18,16,.75); color: #fef3c7; border-radius: 5px; padding: 0 3px; }
   .person .bub { font-size: 12px; height: 14px; }
   .raider .ic { filter: drop-shadow(0 0 4px #dc2626); }
   #log { background: #101c12; font-size: 12px; padding: 8px 12px; max-height: 92px; overflow-y: auto; line-height: 1.55; border-bottom: 1px solid #2c4429; }
   /* ---------- Panels / tabs ---------- */
   #panel { padding: 12px; }
-  .card { background: #243824; border: 1px solid #3f6212; border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+  .card { background: #221d18; border: 1px solid #453a2e; border-radius: 14px; padding: 12px; margin-bottom: 10px; }
   .card h3 { font-size: 15px; margin-bottom: 6px; }
   .card p { font-size: 13px; opacity: .9; line-height: 1.45; }
   .card .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
   .cost { font-size: 12px; opacity: .85; }
-  .bar { height: 8px; background: #16241a; border-radius: 4px; overflow: hidden; margin-top: 6px; }
-  .bar i { display: block; height: 100%; background: #84cc16; }
-  #tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: #16241a; border-top: 2px solid #3f6212; display: flex; }
-  #tabbar button { flex: 1; background: none; border-radius: 0; padding: 10px 2px; font-size: 12px; color: #d9f99d; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  #tabbar button.on { background: #243824; color: #fff; }
+  .bar { height: 8px; background: #141210; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+  .bar i { display: block; height: 100%; background: #f59e0b; }
+  #tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: #171310; border-top: 2px solid #453a2e; display: flex; }
+  #tabbar button { flex: 1; background: none; border: none; border-radius: 0; padding: 10px 2px; font-size: 12px; color: #c9b896; display: flex; flex-direction: column; align-items: center; gap: 2px; font-weight: 600; }
+  #tabbar button.on { background: #2e2721; color: #f59e0b; }
   #tabbar .tic { font-size: 19px; }
-  .jobrow, .personrow { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #2c4429; font-size: 13px; }
+  .jobrow, .personrow { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #453a2e; font-size: 13px; }
   .jobrow:last-child, .personrow:last-child { border-bottom: none; }
   .jobrow .grow, .personrow .grow { flex: 1; }
   .pm { width: 34px; height: 34px; font-size: 18px; padding: 0; border-radius: 9px; }
-  select, input[type=text] { padding: 8px 10px; border-radius: 10px; border: 1px solid #3f6212; background: #16241a; color: #fff; font-size: 14px; }
+  select, input[type=text] { padding: 8px 10px; border-radius: 10px; border: 1px solid #453a2e; background: #2e2721; color: #fef3c7; font-size: 14px; }
   .toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); background: #111827; color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 14px; z-index: 60; box-shadow: 0 4px 18px rgba(0,0,0,.5); max-width: 92vw; text-align: center; }
   .small { font-size: 12px; opacity: .8; }
 </style>
@@ -81,7 +88,8 @@
 <body>
 
 <div id="filesScreen">
-  <h1>🏕️ City Simulator</h1>
+  <div style="text-align:center;font-size:46px;line-height:1.1">🔥</div>
+  <h1>City Simulator</h1>
   <div class="sub">An incremental city builder — Stone Age to the Sky Age</div>
   <div id="slots"></div>
   <div class="note">💾 Saves live in this browser on this device (that's how GitHub Pages saving works).<br>The full cloud-save version lives in Muse.</div>
@@ -93,19 +101,20 @@
       <span class="cityname" id="hudCity">City</span>
       <span class="yearline" id="hudYear">Year 1</span>
       <span class="yearline" id="hudSave">💾 Saved</span>
+      <span><button class="spdbtn" onclick="setSpeed(1)">1×</button> <button class="spdbtn" onclick="setSpeed(2)">2×</button> <button class="spdbtn" onclick="setSpeed(4)">4×</button> <button class="spdbtn filesb" onclick="backToFiles()">📁 Files</button></span>
     </div>
     <div id="resbar"></div>
   </div>
   <div id="questBanner"></div>
   <div id="mapWrap" class="day"></div>
-  <div id="log"></div>
   <div id="panel"></div>
   <div id="tabbar">
     <button data-tab="build"><span class="tic">🔨</span>Build</button>
-    <button data-tab="research"><span class="tic">🔬</span>Research</button>
     <button data-tab="jobs"><span class="tic">💼</span>Jobs</button>
-    <button data-tab="people"><span class="tic">🧑‍🤝‍🧑</span>People</button>
     <button data-tab="quests"><span class="tic">📜</span>Quests</button>
+    <button data-tab="research"><span class="tic">🔬</span>Research</button>
+    <button data-tab="people"><span class="tic">🧑‍🤝‍🧑</span>People</button>
+    <button data-tab="log"><span class="tic">📖</span>Log</button>
     <button data-tab="settings"><span class="tic">⚙️</span>Settings</button>
   </div>
 </div>
@@ -218,7 +227,7 @@ function $(id){ return document.getElementById(id); }
 function esc(t){ return String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 function toast(msg){ const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2600); }
 function log(msg){ if(!S) return; S.log.unshift("Year " + S.year + " — " + msg); S.log = S.log.slice(0, 40); renderLog(); }
-function renderLog(){ if(!S) return; $("log").innerHTML = S.log.map(esc).join("<br>"); }
+function renderLog(){ if(!S) return; if (tab === "log") renderPanel(); }
 
 function newPerson(age, x, y){
   const used = S ? S.people.map(p=>p.name) : [];
@@ -237,7 +246,7 @@ function newGame(cityName){
     questIdx: 0, questsDone: {}, raidsSurvived: 0, log: [], speed: 1, manualJobs: false, jobCounts: {}, raidIn: 10, bornTotal: 0 };
   S = s;
   for (let i = 0; i < 6; i++) s.people.push(newPerson(19 + Math.floor(Math.random()*22)));
-  for (let i = 0; i < 3; i++) s.buildings.push({ id: uidC++, type: "tent", x: 10 + i*11, y: 63, building: false, progress: 1, tier: 0 });
+  for (let i = 0; i < 3; i++) s.buildings.push({ id: uidC++, type: "tent", x: 10 + i*11, y: 26, building: false, progress: 1, tier: 0 });
   assignHomes(); autoJobs();
   log("🏕️ " + cityName + " is founded with 6 people and 3 tents.");
   return s;
@@ -389,7 +398,7 @@ function checkQuests(){
 function startRaid(){
   const fighters = alive().filter(p => p.age >= 18);
   const n = Math.max(1, Math.min(4, Math.round(fighters.length * 0.35)));
-  raidFx = { t: 0, raiders: Array.from({length: n}, (_, i) => ({ x: -4 - i * 4, y: 60 + Math.random()*25, hp: 30, el: null })) };
+  raidFx = { t: 0, raiders: Array.from({length: n}, (_, i) => ({ x: -4 - i * 4, y: 30 + Math.random()*40, hp: 30, el: null })) };
   log("⚔️ Raiders are attacking " + S.cityName + "!");
 }
 function resolveRaid(){
@@ -474,11 +483,14 @@ function renderHud(){
 const personEls = new Map(), bldgEls = new Map();
 function renderMap(){
   if (!S) return;
-  const wrap = $("mapWrap");
+  const mapEl = $("mapWrap");
+  let wrap = mapEl.querySelector("#world");
+  if (!wrap) { wrap = document.createElement("div"); wrap.id = "world"; wrap.style.cssText = "position:absolute;inset:0;transform-origin:0 0;"; mapEl.appendChild(wrap); applyView(); }
+  if (!mapEl.querySelector("#mapBtns")) { const mb = document.createElement("div"); mb.id = "mapBtns"; mb.style.cssText = "position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:20"; mb.innerHTML = '<button class="mbtn" onclick="zoomIn()">+</button><button class="mbtn" onclick="zoomOut()">\u2212</button><button class="mbtn" onclick="resetView()">🔥</button>'; mapEl.appendChild(mb); }
   // connected street grid: horizontal avenues joined by vertical streets
   if (!wrap.querySelector(".street")) {
-    [68, 80, 92].forEach(y => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;left:0;right:0;top:" + y + "%;height:8px;background:#6b5741;border-top:1px solid rgba(255,255,255,.25);border-bottom:1px solid rgba(0,0,0,.25);pointer-events:none"; wrap.appendChild(st); });
-    [16, 49, 82].forEach(x => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;top:55%;bottom:0;left:" + x + "%;width:8px;background:#6b5741;border-left:1px solid rgba(255,255,255,.25);border-right:1px solid rgba(0,0,0,.25);pointer-events:none"; wrap.appendChild(st); });
+    [31, 49, 67].forEach(y => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;left:0;right:0;top:" + y + "%;height:10px;background:#8d8d84;border-top:1px solid rgba(255,255,255,.35);border-bottom:1px solid rgba(0,0,0,.3);pointer-events:none"; wrap.appendChild(st); });
+    [16, 49, 82].forEach(x => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;top:6%;height:70%;left:" + x + "%;width:10px;background:#8d8d84;border-left:1px solid rgba(255,255,255,.35);border-right:1px solid rgba(0,0,0,.3);pointer-events:none"; wrap.appendChild(st); });
   }
   // buildings
   const seenB = new Set();
@@ -502,7 +514,7 @@ function renderMap(){
     seenP.add(p.id);
     let el = personEls.get(p.id);
     if (!el) { el = document.createElement("div"); el.className = "person"; personEls.set(p.id, el); wrap.appendChild(el); }
-    if (Math.random() < 0.02 || (p.tx === 0 && p.ty === 0)) { p.tx = 6 + Math.random() * 88; p.ty = 58 + Math.random() * 34; }
+    if (Math.random() < 0.02 || (p.tx === 0 && p.ty === 0)) { p.tx = 6 + Math.random() * 88; p.ty = 14 + Math.random() * 56; }
     const dx = p.tx - p.x, dy = p.ty - p.y, dist = Math.hypot(dx, dy);
     if (dist < 2) { p.tx = 6 + Math.random() * 88; p.ty = 58 + Math.random() * 34; }
     else { p.x += dx / dist * 0.55; p.y += dy / dist * 0.55; }
@@ -578,7 +590,10 @@ function renderPanel(){
     P.innerHTML = alive().concat(S.people.filter(p=>!p.alive)).map(p => '<div class="personrow"><span>' + (p.alive ? (p.age < 6 ? "👶" : p.age < 18 ? "🧒" : "🧑") : "🕯️") + '</span><span class="grow"><b>' + esc(p.name) + "</b> · age " + p.age + (p.alive ? " · " + (JOBS[p.job] ? JOBS[p.job].name : p.job) + " ⭐" + (p.age >= 18 ? jobLevel(p, p.job) : "—") + " · 🎓 Lv" + eduLevel(p) : " · passed") + '</span>' + (p.alive ? '<button class="btn-alt" onclick="selPerson=' + p.id + ';renderPanel()">View</button>' : "") + "</div>").join("");
   }
   if (tab === "quests") {
-    P.innerHTML = QUESTS.map((q, i) => '<div class="card" style="' + (i < S.questIdx ? "opacity:.65" : i === S.questIdx ? "border-color:#facc15" : "opacity:.45") + '"><h3>' + (i < S.questIdx ? "✅ " : i === S.questIdx ? "📜 " : "🔒 ") + q.name + '</h3><p>' + q.desc + '</p><p class="small">Reward: ' + costText(q.reward) + "</p></div>").join("");
+    P.innerHTML = QUESTS.map((q, i) => '<div class="card" style="' + (i < S.questIdx ? "opacity:.65" : i === S.questIdx ? "border-color:#f59e0b" : "opacity:.45") + '"><h3>' + (i < S.questIdx ? "✅ " : i === S.questIdx ? "📜 " : "🔒 ") + q.name + '</h3><p>' + q.desc + '</p><p class="small">Reward: ' + costText(q.reward) + "</p></div>").join("");
+  }
+  if (tab === "log") {
+    P.innerHTML = '<div class="card"><h3>📖 Log</h3><p style="line-height:1.65">' + (S.log.length ? S.log.map(esc).join("<br>") : "Nothing yet.") + "</p></div>";
   }
   if (tab === "settings") {
     P.innerHTML = '<div class="card"><h3>⚙️ Settings</h3>' +
@@ -603,7 +618,7 @@ function queueBuild(t){
   const d = BUILDINGS[t]; if (!canAfford(d.cost)) { toast("Not enough resources"); return; }
   payCost(d.cost);
   // organized town: buildings line up in neat rows along three streets
-  const rows = [63, 75, 87], cols = [10, 21, 32, 43, 54, 65, 76, 87];
+  const rows = [26, 44, 62], cols = [10, 21, 32, 43, 54, 65, 76, 87];
   const taken = new Set(S.buildings.map(b => Math.round(b.x) + "," + Math.round(b.y)));
   let spot = null;
   for (const ry of rows) { for (const cx of cols) { if (!taken.has(cx + "," + ry)) { spot = [cx, ry]; break; } } if (spot) break; }
@@ -630,9 +645,9 @@ function backToFiles(){ saveGame(false); stopLoop(); S = null; activeSlot = -1; 
 function showFiles(){
   $("gameScreen").style.display = "none"; $("filesScreen").style.display = "block";
   $("slots").innerHTML = store.slots.map((s, i) => {
-    if (!s) return '<div class="slot"><div class="slot-title">📁 File ' + (i+1) + ' — Empty</div><div class="slot-meta">Start a brand-new city in this file</div><div class="row"><input type="text" id="cityIn' + i + '" placeholder="Name your city"><button onclick="startNew(' + i + ')">▶ Start</button></div></div>';
+    if (!s) return '<div class="slot"><div class="slot-title"><span class="filepill">FILE ' + (i+1) + '</span> Empty</div><div class="slot-meta">Start a brand-new city in this file</div><div class="row"><input type="text" id="cityIn' + i + '" placeholder="Name your city"><button onclick="startNew(' + i + ')">▶ Start</button></div></div>';
     const st = s.state;
-    return '<div class="slot"><div class="slot-title">📁 ' + esc(s.fileName) + ' — ' + esc(st.cityName) + '</div><div class="slot-meta">Year ' + st.year + " · " + ERAS[st.era] + " · 👥 " + st.people.filter(p=>p.alive).length + " people · saved " + new Date(s.savedAt).toLocaleString() + '</div><div class="row"><button onclick="loadSlot(' + i + ')">▶ Load</button><input type="text" id="fileIn' + i + '" placeholder="Rename this file" value="' + esc(s.fileName) + '"><button class="btn-alt" onclick="renameSlot(' + i + ')">Rename</button><button class="btn-danger" onclick="deleteSlot(' + i + ')">Delete</button></div></div>';
+    return '<div class="slot"><div class="slot-title"><span class="filepill">' + esc(s.fileName.toUpperCase()) + '</span> ' + esc(st.cityName) + '</div><div class="slot-meta">Year ' + st.year + " · " + ERAS[st.era] + " · 👥 " + st.people.filter(p=>p.alive).length + " people · saved " + new Date(s.savedAt).toLocaleString() + '</div><div class="row"><button onclick="loadSlot(' + i + ')">▶ Load</button><input type="text" id="fileIn' + i + '" placeholder="Rename this file" value="' + esc(s.fileName) + '"><button class="btn-alt" onclick="renameSlot(' + i + ')">Rename</button><button class="btn-danger" onclick="deleteSlot(' + i + ')">Delete</button></div></div>';
   }).join("");
 }
 function startNew(i){ const v = ($("cityIn" + i).value || "").trim() || "New City"; activeSlot = i; S = newGame(v); store.slots[i] = { fileName: "File " + (i+1), savedAt: Date.now(), state: S }; saveStore(); enterGame(); }
@@ -641,11 +656,22 @@ function renameSlot(i){ const v = ($("fileIn" + i).value || "").trim(); if (v &&
 function deleteSlot(i){ if (!confirm("Delete File " + (i+1) + "? This can't be undone.")) return; store.slots[i] = null; saveStore(); showFiles(); }
 function enterGame(){
   $("filesScreen").style.display = "none"; $("gameScreen").style.display = "block";
-  personEls.clear(); bldgEls.clear(); $("mapWrap").innerHTML = "";
+  personEls.clear(); bldgEls.clear(); $("mapWrap").innerHTML = ""; if (typeof view !== "undefined") view = { z: 1, x: 0, y: 0 };
   // religions arrive in the modern era
   alive().forEach(p => { if (S.era >= 3 && !p.religion) p.religion = RELIGIONS[Math.floor(Math.random()*RELIGIONS.length)]; });
   tab = "build"; renderAll(); startLoop();
 }
+let view = { z: 1, x: 0, y: 0 };
+function applyView(){ const w = $("world"); if (w) w.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.z + ")"; }
+function zoomIn(){ view.z = Math.min(2.5, view.z * 1.2); applyView(); }
+function zoomOut(){ view.z = Math.max(0.6, view.z / 1.2); applyView(); }
+function resetView(){ view = { z: 1, x: 0, y: 0 }; applyView(); }
+(function(){ const mw = $("mapWrap"); let drag = null;
+  mw.addEventListener("pointerdown", e => { if (e.target.closest("#mapBtns")) return; drag = { sx: e.clientX, sy: e.clientY, x: view.x, y: view.y }; });
+  mw.addEventListener("pointermove", e => { if (!drag) return; view.x = drag.x + (e.clientX - drag.sx); view.y = drag.y + (e.clientY - drag.sy); applyView(); });
+  window.addEventListener("pointerup", () => { drag = null; });
+  mw.addEventListener("wheel", e => { e.preventDefault(); view.z = Math.max(0.6, Math.min(2.5, view.z * (e.deltaY < 0 ? 1.1 : 0.9))); applyView(); }, { passive: false });
+})();
 document.querySelectorAll("#tabbar button").forEach(b => b.addEventListener("click", () => { tab = b.dataset.tab; selPerson = null; renderPanel(); }));
 showFiles();
 </script>
