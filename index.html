@@ -475,9 +475,10 @@ const personEls = new Map(), bldgEls = new Map();
 function renderMap(){
   if (!S) return;
   const wrap = $("mapWrap");
-  // neat streets under the building rows
+  // connected street grid: horizontal avenues joined by vertical streets
   if (!wrap.querySelector(".street")) {
-    [68, 80, 92].forEach(y => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;left:0;right:0;top:" + y + "%;height:7px;background:rgba(90,74,52,.55);border-top:1px dashed rgba(255,255,255,.35);border-bottom:1px dashed rgba(255,255,255,.35);pointer-events:none"; wrap.appendChild(st); });
+    [68, 80, 92].forEach(y => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;left:0;right:0;top:" + y + "%;height:8px;background:#6b5741;border-top:1px solid rgba(255,255,255,.25);border-bottom:1px solid rgba(0,0,0,.25);pointer-events:none"; wrap.appendChild(st); });
+    [16, 49, 82].forEach(x => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;top:55%;bottom:0;left:" + x + "%;width:8px;background:#6b5741;border-left:1px solid rgba(255,255,255,.25);border-right:1px solid rgba(0,0,0,.25);pointer-events:none"; wrap.appendChild(st); });
   }
   // buildings
   const seenB = new Set();
