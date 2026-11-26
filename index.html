@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0f1a14;--panel:#16261c;--edge:#2c4a37;--card:#1b3023;--amber:#f5b73b;--road:#35b8e6;--cream:#f3ecd6;--mute:#a9c2ae}
+:root{--ink:#141210;--panel:#221d18;--edge:#453a2e;--card:#2e2721;--amber:#f59e0b;--road:#8f8a82;--cream:#fef3c7;--mute:#c9b896}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body,#gameScreen,#hud,#panel,#tabbar,#questBanner{-webkit-user-select:none;user-select:none}
 input{-webkit-user-select:text;user-select:text}
@@ -15,7 +15,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:var(--ink);color:
 h1,.cityname,.chip,.card h3,.bldg .lb{font-family:"Baloo 2",system-ui,sans-serif}
 button{font-family:inherit;cursor:pointer;border:1px solid var(--edge);border-radius:10px;padding:8px 12px;font-size:14px;background:var(--amber);color:#231303;font-weight:700}
 button:active{transform:scale(.97)}button:disabled{opacity:.45;cursor:default}
-.btn-alt{background:#24402f;color:var(--cream)}.btn-danger{background:#991b1b;color:#fff}.btn-blue{background:#1d4ed8;color:#fff}
+.btn-alt{background:#2e2721;color:var(--cream)}.btn-danger{background:#991b1b;color:#fff}.btn-blue{background:#1d4ed8;color:#fff}
 h1{font-size:28px}
 #filesScreen{max-width:480px;margin:0 auto;padding:28px 16px 60px}
 #filesScreen h1{text-align:center;margin-bottom:4px}
@@ -27,57 +27,57 @@ h1{font-size:28px}
 .slot input,input[type=text]{flex:1;min-width:140px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--ink);color:var(--cream);font-size:14px}
 .note{font-size:12px;opacity:.7;text-align:center;margin-top:14px;line-height:1.5}
 #gameScreen{display:none}
-#hud{position:sticky;top:8px;z-index:30;margin:8px;border-radius:18px;border:1px solid var(--edge);background:rgba(22,38,28,.94);backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.45);padding:10px 12px 8px}
+#hud{position:sticky;top:8px;z-index:30;margin:8px;border-radius:18px;border:1px solid var(--edge);background:rgba(34,29,24,.94);backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.45);padding:10px 12px 8px}
 .toprow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:8px}
-.crest{font-size:24px;width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#1f3828;border:1px solid var(--edge)}
+.crest{font-size:24px;width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#2e2721;border:1px solid var(--edge)}
 .cityname{font-weight:800;font-size:18px;line-height:1.1}
 .yearline{font-size:12px;color:var(--mute)}
-.daybar{flex:1;min-width:120px;height:8px;border-radius:99px;background:#0c150f;overflow:hidden}
-.daybar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd35a,var(--amber) 60%,#8b7cf6)}
+.daybar{flex:1;min-width:120px;height:8px;border-radius:99px;background:#141210;overflow:hidden}
+.daybar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd35a,var(--amber) 60%,#f472b6)}
 .ctrls{display:flex;gap:6px}
-.spdbtn{background:#1f3828;color:#cfe3d2;border:1px solid var(--edge);border-radius:12px;padding:6px 11px;font-size:13px;font-weight:700}
-.spdbtn.on{background:var(--amber);color:#2a1a02;border-color:var(--amber)}
-.spdbtn.filesb{background:#2a1a02;color:var(--amber);border-color:#7a5410}
+.spdbtn{background:#2e2721;color:#c9b896;border:1px solid var(--edge);border-radius:12px;padding:6px 11px;font-size:13px;font-weight:700}
+.spdbtn.on{background:var(--amber);color:#231303;border-color:var(--amber)}
+.spdbtn.filesb{background:#231303;color:var(--amber);border-color:#453a2e}
 #resbar{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
 #resbar::-webkit-scrollbar{display:none}
 .chip{font-weight:700;font-size:14px;background:var(--card);border:1px solid var(--edge);border-radius:12px;padding:3px 12px;white-space:nowrap}
 .chip.low{background:#3a1616;border-color:#dc2626;color:#ffb4b4;animation:pulse 1.2s ease-in-out infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 3px rgba(220,38,38,.25)}}
-#questBanner{margin:0 8px;border-radius:14px;border:1px solid #1d5d78;background:linear-gradient(90deg,#0e3346,#12283a);color:#d8f2ff;padding:8px 14px;font-size:13px}
+#questBanner{margin:0 8px;border-radius:14px;border:1px solid #1e40af;background:#2563eb;color:#fff;padding:8px 14px;font-size:13px}
 #mapWrap{position:relative;height:calc(100dvh - 200px);min-height:340px;margin:8px 8px 96px;border-radius:18px;border:1px solid var(--edge);overflow:hidden;touch-action:none;contain:layout paint;transition:background 1s}
-#mapWrap.day{background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 8px),linear-gradient(#78b958,#3f7f33)}
-#mapWrap.dusk{background:repeating-linear-gradient(115deg,rgba(255,255,255,.04) 0 2px,transparent 2px 8px),linear-gradient(#c58a3d,#46763c)}
-#mapWrap.night{background:repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 8px),linear-gradient(#1d3023,#101c14)}
+#mapWrap.day{background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 8px),linear-gradient(#79b657,#4e8f3a)}
+#mapWrap.dusk{background:repeating-linear-gradient(115deg,rgba(255,255,255,.04) 0 2px,transparent 2px 8px),linear-gradient(#c98a3d,#4c7a3f)}
+#mapWrap.night{background:repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 8px),linear-gradient(#22331f,#16241a)}
 #world{position:absolute;inset:0;transform-origin:0 0;will-change:transform}
-.street{position:absolute;background:var(--road);border-radius:6px;box-shadow:0 0 10px rgba(53,184,230,.7);opacity:.9;pointer-events:none}
+.street{position:absolute;background:var(--road);border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.35);opacity:.9;pointer-events:none}
 .bldg{position:absolute;transform:translate(-50%,-80%);text-align:center;pointer-events:none}
 .bldg .ic{font-size:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
 .bldg .frame{font-size:15px;line-height:1}
-.bldg .lb{font-size:10px;background:rgba(15,26,20,.85);border:1px solid var(--edge);border-radius:8px;padding:0 6px}
+.bldg .lb{font-size:10px;background:rgba(20,18,16,.85);border:1px solid var(--edge);border-radius:8px;padding:0 6px}
 .bldg .prog{width:44px;height:5px;background:rgba(0,0,0,.5);border-radius:3px;margin:2px auto 0;overflow:hidden}
 .bldg .prog i{display:block;height:100%;background:var(--amber)}
 .person{position:absolute;transform:translate(-50%,-90%);text-align:center;transition:left .9s linear,top .9s linear;pointer-events:none;z-index:5;will-change:left,top}
 .person .ic{font-size:20px}.person .bub{font-size:12px;height:14px}
-.person .nm{font-size:8px;background:rgba(15,26,20,.8);border-radius:5px;padding:0 3px}
+.person .nm{font-size:8px;background:rgba(20,18,16,.8);border-radius:5px;padding:0 3px}
 .raider .ic{filter:drop-shadow(0 0 4px #dc2626)}
 #mapBtns{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:20}
-.mbtn{width:44px;height:44px;border-radius:50%;background:rgba(15,26,20,.92);color:var(--cream);border:1px solid var(--edge);font-size:20px;padding:0;box-shadow:0 3px 12px rgba(0,0,0,.4)}
-#panel{position:fixed;left:50%;bottom:84px;width:min(720px,calc(100% - 20px));max-height:48dvh;overflow:auto;z-index:35;background:rgba(15,26,20,.97);border:1px solid var(--edge);border-radius:20px;padding:12px;box-shadow:0 -8px 30px rgba(0,0,0,.5);transform:translate(-50%,calc(100% + 120px));transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.mbtn{width:44px;height:44px;border-radius:50%;background:rgba(34,29,24,.92);color:var(--cream);border:1px solid var(--edge);font-size:20px;padding:0;box-shadow:0 3px 12px rgba(0,0,0,.4)}
+#panel{position:fixed;left:50%;bottom:84px;width:min(720px,calc(100% - 20px));max-height:48dvh;overflow:auto;z-index:35;background:rgba(20,18,16,.97);border:1px solid var(--edge);border-radius:20px;padding:12px;box-shadow:0 -8px 30px rgba(0,0,0,.5);transform:translate(-50%,calc(100% + 120px));transition:transform .28s cubic-bezier(.2,.8,.2,1)}
 body.sheet-open #panel{transform:translate(-50%,0)}
 .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:12px;margin-bottom:10px}
 .card h3{font-size:16px;margin-bottom:6px}.card p{font-size:13px;opacity:.9;line-height:1.45}
 .card .row{margin-top:8px}.cost,.small{font-size:12px;opacity:.85}
-.bar{height:8px;background:#0c150f;border-radius:4px;overflow:hidden;margin-top:6px}
+.bar{height:8px;background:#141210;border-radius:4px;overflow:hidden;margin-top:6px}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,#ffd35a,var(--amber))}
-#tabbar{position:fixed;left:50%;bottom:10px;width:min(860px,calc(100% - 20px));transform:translateX(-50%);z-index:40;display:flex;gap:6px;padding:6px;border:1px solid var(--edge);border-radius:20px;background:rgba(15,26,20,.95);backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.5)}
+#tabbar{position:fixed;left:50%;bottom:10px;width:min(860px,calc(100% - 20px));transform:translateX(-50%);z-index:40;display:flex;gap:6px;padding:6px;border:1px solid var(--edge);border-radius:20px;background:rgba(23,19,16,.95);backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.5)}
 #tabbar button{flex:1;background:none;border:none;border-radius:14px;padding:7px 2px;font-size:11px;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:600}
-#tabbar button.on{background:#24402f;color:var(--amber);box-shadow:inset 0 0 0 1px #3f6b4f}
+#tabbar button.on{background:#2e2721;color:var(--amber);box-shadow:inset 0 0 0 1px #453a2e}
 .tic{font-size:19px}
 .jobrow,.personrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--edge);font-size:13px}
 .jobrow:last-child,.personrow:last-child{border-bottom:none}.grow{flex:1}
 .pm{width:34px;height:34px;font-size:18px;padding:0;border-radius:9px}
-.toast{position:fixed;left:50%;top:150px;transform:translateX(-50%);background:rgba(22,38,28,.97);border:1px solid var(--edge);color:var(--cream);padding:12px 18px;border-radius:16px;font-size:14px;z-index:60;box-shadow:0 4px 18px rgba(0,0,0,.5);max-width:92vw;text-align:center;animation:drop .3s ease-out}
+.toast{position:fixed;left:50%;top:150px;transform:translateX(-50%);background:rgba(34,29,24,.97);border:1px solid var(--edge);color:var(--cream);padding:12px 18px;border-radius:16px;font-size:14px;z-index:60;box-shadow:0 4px 18px rgba(0,0,0,.5);max-width:92vw;text-align:center;animation:drop .3s ease-out}
 @keyframes drop{from{transform:translate(-50%,-12px);opacity:0}}
 @media(prefers-reduced-motion:reduce){.chip.low,.toast{animation:none}#panel{transition:none}.person{transition:none}}
 </style>
@@ -433,7 +433,7 @@ function renderPanel(){
     if(p)h=personCard(p);else{selPerson=null;
       h=alive().concat(S.people.filter(p=>!p.alive)).map(p=>'<div class="personrow"><span>'+(p.alive?(p.age<6?"👶":p.age<18?"🧒":"🧑"):"🕯️")+'</span><span class="grow"><b>'+esc(p.name)+"</b> · age "+p.age+(p.alive?" · "+(JOBS[p.job]?JOBS[p.job].name:p.job)+" ⭐"+(p.age>=18?jobLevel(p,p.job):"—")+" · 🎓 Lv"+eduLevel(p):" · passed")+"</span>"+(p.alive?'<button class="btn-alt" onclick="selPerson='+p.id+';renderPanel()">View</button>':"")+"</div>").join("")}
   }
-  if(tab==="quests")h=QUESTS.map((q,i)=>'<div class="card" style="'+(i<S.questIdx?"opacity:.65":i===S.questIdx?"border-color:#f5b73b":"opacity:.45")+'"><h3>'+(i<S.questIdx?"✅ ":i===S.questIdx?"📜 ":"🔒 ")+q.name+"</h3><p>"+q.desc+'</p><p class="small">Reward: '+costText(q.reward)+"</p></div>").join("");
+  if(tab==="quests")h=QUESTS.map((q,i)=>'<div class="card" style="'+(i<S.questIdx?"opacity:.65":i===S.questIdx?"border-color:#f59e0b":"opacity:.45")+'"><h3>'+(i<S.questIdx?"✅ ":i===S.questIdx?"📜 ":"🔒 ")+q.name+"</h3><p>"+q.desc+'</p><p class="small">Reward: '+costText(q.reward)+"</p></div>").join("");
   if(tab==="log")h='<div class="card"><h3>📖 Log</h3><p style="line-height:1.65">'+(S.log.length?S.log.map(esc).join("<br>"):"Nothing yet.")+"</p></div>";
   if(tab==="settings")h='<div class="card"><h3>⚙️ Settings</h3><p>City name</p><div class="row"><input type="text" id="cityNameIn" value="'+esc(S.cityName)+'"><button onclick="renameCity()">Save name</button></div><p class="small" style="margin-top:10px">⏳ 1 day = 1 year · Raids every 10 years · Saves live in this browser.</p><div class="row" style="margin-top:12px"><button class="btn-blue" onclick="backToFiles()">📁 Save files</button></div><div class="row" style="margin-top:14px"><button class="btn-danger" onclick="restartCity()">🗑️ Restart this city</button></div></div>';
   P.innerHTML=h||'<div class="card"><p>Nothing here yet.</p></div>';
