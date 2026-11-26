@@ -7,103 +7,104 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body, #gameScreen, #mapWrap, #hud, #panel, #tabbar, #log, #questBanner { -webkit-user-select: none; user-select: none; }
-  input, textarea { -webkit-user-select: text; user-select: text; }
-  .bldg.rising .ic { animation: riseIn .5s ease-out; transform-origin: bottom center; }
-  @keyframes riseIn { from { transform: scaleY(.15); opacity: .4; } to { transform: scaleY(1); opacity: 1; } }
-  .bldg .frame { font-size: 15px; line-height: 1; }
-  body { font-family: system-ui, -apple-system, sans-serif; background: #141210; color: #fef3c7; overflow-x: hidden; }
-  h1, #hud .cityname { font-family: "Baloo 2", system-ui, sans-serif; }
-  button { font-family: inherit; cursor: pointer; border: 1px solid #453a2e; border-radius: 10px; padding: 8px 12px; font-size: 14px; background: #f59e0b; color: #231303; font-weight: 700; }
-  button:active { transform: scale(.97); }
-  button:disabled { opacity: .45; cursor: default; }
-  .btn-alt { background: #2e2721; color: #fef3c7; }
-  .btn-danger { background: #991b1b; }
-  .btn-blue { background: #1d4ed8; }
-  h1 { font-size: 26px; }
-  /* ---------- Files screen ---------- */
-  #filesScreen { max-width: 480px; margin: 0 auto; padding: 28px 16px 60px; }
-  #filesScreen h1 { text-align: center; margin-bottom: 4px; }
-  #filesScreen .sub { text-align: center; color: #c9b896; margin-bottom: 22px; font-size: 14px; }
-  .filepill { background: #f59e0b; color: #231303; border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 800; letter-spacing: .4px; }
-  .slot { background: #221d18; border: 2px solid #453a2e; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
-  .slot .slot-title { font-size: 17px; font-weight: 700; }
-  .slot .slot-meta { font-size: 13px; opacity: .85; margin: 3px 0 10px; }
-  .slot .row { display: flex; gap: 8px; flex-wrap: wrap; }
-  .slot input { flex: 1; min-width: 140px; padding: 8px 10px; border-radius: 10px; border: 1px solid #453a2e; background: #141210; color: #fef3c7; font-size: 14px; }
-  .note { font-size: 12px; opacity: .7; text-align: center; margin-top: 14px; line-height: 1.5; }
-  /* ---------- Game layout ---------- */
-  #gameScreen { display: none; max-width: 900px; margin: 0 auto; padding-bottom: 86px; }
-  #hud { position: sticky; top: 0; z-index: 30; background: #221d18; border-bottom: 2px solid #453a2e; padding: 8px 10px; }
-  .spdbtn { background: #2e2721; color: #c9b896; border: 1px solid #453a2e; border-radius: 999px; padding: 3px 10px; font-size: 12.5px; font-weight: 600; }
-  .spdbtn.filesb { background: #f59e0b; color: #231303; font-weight: 800; }
-  .mbtn { width: 38px; height: 38px; border-radius: 50%; background: rgba(34,29,24,.92); color: #fef3c7; border: 1px solid #453a2e; font-size: 18px; padding: 0; line-height: 1; }
-  #hud .cityline { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-  #hud .cityname { font-weight: 800; font-size: 17px; }
-  #hud .yearline { font-size: 13px; opacity: .9; }
-  #resbar { display: flex; gap: 6px; overflow-x: auto; padding: 8px 2px 2px; scrollbar-width: none; }
-  #resbar::-webkit-scrollbar { display: none; }
-  .chip { background: #2e2721; border: 1px solid #453a2e; border-radius: 999px; padding: 4px 10px; font-size: 13px; white-space: nowrap; color: #fef3c7; }
-  .chip.low { border-color: #dc2626; color: #fca5a5; }
-  #questBanner { background: #2563eb; color: #fff; border-bottom: 1px solid #1e40af; padding: 7px 12px; font-size: 13px; }
-  #mapWrap { position: relative; height: 62vh; min-height: 380px; overflow: hidden; transition: background 1s; }
-  #mapWrap.day { background: linear-gradient(#79b657, #4e8f3a); }
-  #mapWrap.dusk { background: linear-gradient(#c98a3d, #4c7a3f); }
-  #mapWrap.night { background: linear-gradient(#22331f, #16241a); }
-  .deco { position: absolute; font-size: 22px; opacity: .9; pointer-events: none; }
-  .bldg { position: absolute; transform: translate(-50%,-80%); text-align: center; pointer-events: none; }
-  .bldg .ic { font-size: 30px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
-  .bldg .lb { font-size: 9px; background: rgba(20,18,16,.75); color: #fef3c7; border-radius: 6px; padding: 1px 4px; margin-top: -2px; }
-  .bldg .prog { width: 44px; height: 5px; background: rgba(0,0,0,.5); border-radius: 3px; margin: 2px auto 0; overflow: hidden; }
-  .bldg .prog i { display: block; height: 100%; background: #f59e0b; }
-  .person { position: absolute; transform: translate(-50%,-90%); text-align: center; transition: left .9s linear, top .9s linear; pointer-events: none; z-index: 5; }
-  .person .ic { font-size: 20px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.5)); }
-  .person .nm { font-size: 8px; background: rgba(20,18,16,.75); color: #fef3c7; border-radius: 5px; padding: 0 3px; }
-  .person .bub { font-size: 12px; height: 14px; }
-  .raider .ic { filter: drop-shadow(0 0 4px #dc2626); }
-  #log { background: #101c12; font-size: 12px; padding: 8px 12px; max-height: 92px; overflow-y: auto; line-height: 1.55; border-bottom: 1px solid #2c4429; }
-  /* ---------- Panels / tabs ---------- */
-  #panel { padding: 12px; }
-  .card { background: #221d18; border: 1px solid #453a2e; border-radius: 14px; padding: 12px; margin-bottom: 10px; }
-  .card h3 { font-size: 15px; margin-bottom: 6px; }
-  .card p { font-size: 13px; opacity: .9; line-height: 1.45; }
-  .card .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
-  .cost { font-size: 12px; opacity: .85; }
-  .bar { height: 8px; background: #141210; border-radius: 4px; overflow: hidden; margin-top: 6px; }
-  .bar i { display: block; height: 100%; background: #f59e0b; }
-  #tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 40; background: #171310; border-top: 2px solid #453a2e; display: flex; }
-  #tabbar button { flex: 1; background: none; border: none; border-radius: 0; padding: 10px 2px; font-size: 12px; color: #c9b896; display: flex; flex-direction: column; align-items: center; gap: 2px; font-weight: 600; }
-  #tabbar button.on { background: #2e2721; color: #f59e0b; }
-  #tabbar .tic { font-size: 19px; }
-  .jobrow, .personrow { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #453a2e; font-size: 13px; }
-  .jobrow:last-child, .personrow:last-child { border-bottom: none; }
-  .jobrow .grow, .personrow .grow { flex: 1; }
-  .pm { width: 34px; height: 34px; font-size: 18px; padding: 0; border-radius: 9px; }
-  select, input[type=text] { padding: 8px 10px; border-radius: 10px; border: 1px solid #453a2e; background: #2e2721; color: #fef3c7; font-size: 14px; }
-  .toast { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); background: #111827; color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 14px; z-index: 60; box-shadow: 0 4px 18px rgba(0,0,0,.5); max-width: 92vw; text-align: center; }
-  .small { font-size: 12px; opacity: .8; }
+:root{--ink:#0f1a14;--panel:#16261c;--edge:#2c4a37;--card:#1b3023;--amber:#f5b73b;--road:#35b8e6;--cream:#f3ecd6;--mute:#a9c2ae}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body,#gameScreen,#hud,#panel,#tabbar,#questBanner{-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--ink);color:var(--cream);overflow-x:hidden}
+h1,.cityname,.chip,.card h3,.bldg .lb{font-family:"Baloo 2",system-ui,sans-serif}
+button{font-family:inherit;cursor:pointer;border:1px solid var(--edge);border-radius:10px;padding:8px 12px;font-size:14px;background:var(--amber);color:#231303;font-weight:700}
+button:active{transform:scale(.97)}button:disabled{opacity:.45;cursor:default}
+.btn-alt{background:#24402f;color:var(--cream)}.btn-danger{background:#991b1b;color:#fff}.btn-blue{background:#1d4ed8;color:#fff}
+h1{font-size:28px}
+#filesScreen{max-width:480px;margin:0 auto;padding:28px 16px 60px}
+#filesScreen h1{text-align:center;margin-bottom:4px}
+#filesScreen .sub{text-align:center;color:var(--mute);margin-bottom:22px;font-size:14px}
+.filepill{background:var(--amber);color:#231303;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800}
+.slot{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:14px;margin-bottom:12px}
+.slot-title{font-size:17px;font-weight:700}.slot-meta{font-size:13px;opacity:.85;margin:3px 0 10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.slot input,input[type=text]{flex:1;min-width:140px;padding:8px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--ink);color:var(--cream);font-size:14px}
+.note{font-size:12px;opacity:.7;text-align:center;margin-top:14px;line-height:1.5}
+#gameScreen{display:none}
+#hud{position:sticky;top:8px;z-index:30;margin:8px;border-radius:18px;border:1px solid var(--edge);background:rgba(22,38,28,.94);backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.45);padding:10px 12px 8px}
+.toprow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px}
+.crest{font-size:24px;width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#1f3828;border:1px solid var(--edge)}
+.cityname{font-weight:800;font-size:18px;line-height:1.1}
+.yearline{font-size:12px;color:var(--mute)}
+.daybar{flex:1;min-width:120px;height:8px;border-radius:99px;background:#0c150f;overflow:hidden}
+.daybar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd35a,var(--amber) 60%,#8b7cf6)}
+.ctrls{display:flex;gap:6px}
+.spdbtn{background:#1f3828;color:#cfe3d2;border:1px solid var(--edge);border-radius:12px;padding:6px 11px;font-size:13px;font-weight:700}
+.spdbtn.on{background:var(--amber);color:#2a1a02;border-color:var(--amber)}
+.spdbtn.filesb{background:#2a1a02;color:var(--amber);border-color:#7a5410}
+#resbar{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+#resbar::-webkit-scrollbar{display:none}
+.chip{font-weight:700;font-size:14px;background:var(--card);border:1px solid var(--edge);border-radius:12px;padding:3px 12px;white-space:nowrap}
+.chip.low{background:#3a1616;border-color:#dc2626;color:#ffb4b4;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 3px rgba(220,38,38,.25)}}
+#questBanner{margin:0 8px;border-radius:14px;border:1px solid #1d5d78;background:linear-gradient(90deg,#0e3346,#12283a);color:#d8f2ff;padding:8px 14px;font-size:13px}
+#mapWrap{position:relative;height:calc(100dvh - 200px);min-height:340px;margin:8px 8px 96px;border-radius:18px;border:1px solid var(--edge);overflow:hidden;touch-action:none;contain:layout paint;transition:background 1s}
+#mapWrap.day{background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 8px),linear-gradient(#78b958,#3f7f33)}
+#mapWrap.dusk{background:repeating-linear-gradient(115deg,rgba(255,255,255,.04) 0 2px,transparent 2px 8px),linear-gradient(#c58a3d,#46763c)}
+#mapWrap.night{background:repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 8px),linear-gradient(#1d3023,#101c14)}
+#world{position:absolute;inset:0;transform-origin:0 0;will-change:transform}
+.street{position:absolute;background:var(--road);border-radius:6px;box-shadow:0 0 10px rgba(53,184,230,.7);opacity:.9;pointer-events:none}
+.bldg{position:absolute;transform:translate(-50%,-80%);text-align:center;pointer-events:none}
+.bldg .ic{font-size:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.bldg .frame{font-size:15px;line-height:1}
+.bldg .lb{font-size:10px;background:rgba(15,26,20,.85);border:1px solid var(--edge);border-radius:8px;padding:0 6px}
+.bldg .prog{width:44px;height:5px;background:rgba(0,0,0,.5);border-radius:3px;margin:2px auto 0;overflow:hidden}
+.bldg .prog i{display:block;height:100%;background:var(--amber)}
+.person{position:absolute;transform:translate(-50%,-90%);text-align:center;transition:left .9s linear,top .9s linear;pointer-events:none;z-index:5;will-change:left,top}
+.person .ic{font-size:20px}.person .bub{font-size:12px;height:14px}
+.person .nm{font-size:8px;background:rgba(15,26,20,.8);border-radius:5px;padding:0 3px}
+.raider .ic{filter:drop-shadow(0 0 4px #dc2626)}
+#mapBtns{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:20}
+.mbtn{width:44px;height:44px;border-radius:50%;background:rgba(15,26,20,.92);color:var(--cream);border:1px solid var(--edge);font-size:20px;padding:0;box-shadow:0 3px 12px rgba(0,0,0,.4)}
+#panel{position:fixed;left:50%;bottom:84px;width:min(720px,calc(100% - 20px));max-height:48dvh;overflow:auto;z-index:35;background:rgba(15,26,20,.97);border:1px solid var(--edge);border-radius:20px;padding:12px;box-shadow:0 -8px 30px rgba(0,0,0,.5);transform:translate(-50%,calc(100% + 120px));transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+body.sheet-open #panel{transform:translate(-50%,0)}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:12px;margin-bottom:10px}
+.card h3{font-size:16px;margin-bottom:6px}.card p{font-size:13px;opacity:.9;line-height:1.45}
+.card .row{margin-top:8px}.cost,.small{font-size:12px;opacity:.85}
+.bar{height:8px;background:#0c150f;border-radius:4px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#ffd35a,var(--amber))}
+#tabbar{position:fixed;left:50%;bottom:10px;width:min(860px,calc(100% - 20px));transform:translateX(-50%);z-index:40;display:flex;gap:6px;padding:6px;border:1px solid var(--edge);border-radius:20px;background:rgba(15,26,20,.95);backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.5)}
+#tabbar button{flex:1;background:none;border:none;border-radius:14px;padding:7px 2px;font-size:11px;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:600}
+#tabbar button.on{background:#24402f;color:var(--amber);box-shadow:inset 0 0 0 1px #3f6b4f}
+.tic{font-size:19px}
+.jobrow,.personrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--edge);font-size:13px}
+.jobrow:last-child,.personrow:last-child{border-bottom:none}.grow{flex:1}
+.pm{width:34px;height:34px;font-size:18px;padding:0;border-radius:9px}
+.toast{position:fixed;left:50%;top:150px;transform:translateX(-50%);background:rgba(22,38,28,.97);border:1px solid var(--edge);color:var(--cream);padding:12px 18px;border-radius:16px;font-size:14px;z-index:60;box-shadow:0 4px 18px rgba(0,0,0,.5);max-width:92vw;text-align:center;animation:drop .3s ease-out}
+@keyframes drop{from{transform:translate(-50%,-12px);opacity:0}}
+@media(prefers-reduced-motion:reduce){.chip.low,.toast{animation:none}#panel{transition:none}.person{transition:none}}
 </style>
 </head>
 <body>
-
 <div id="filesScreen">
   <div style="text-align:center;font-size:46px;line-height:1.1">🔥</div>
   <h1>City Simulator</h1>
   <div class="sub">An incremental city builder — Stone Age to the Sky Age</div>
   <div id="slots"></div>
-  <div class="note">💾 Saves live in this browser on this device (that's how GitHub Pages saving works).<br>The full cloud-save version lives in Muse.</div>
+  <div class="note">💾 Saves live in this browser on this device.</div>
 </div>
-
 <div id="gameScreen">
   <div id="hud">
-    <div class="cityline">
-      <span class="cityname" id="hudCity">City</span>
-      <span class="yearline" id="hudYear">Year 1</span>
-      <span class="yearline" id="hudSave">💾 Saved</span>
-      <span><button class="spdbtn" onclick="setSpeed(1)">1×</button> <button class="spdbtn" onclick="setSpeed(2)">2×</button> <button class="spdbtn" onclick="setSpeed(4)">4×</button> <button class="spdbtn filesb" onclick="backToFiles()">📁 Files</button></span>
+    <div class="toprow">
+      <div class="brand"><span class="crest">🏕️</span><div><div class="cityname" id="hudCity">City</div><div class="yearline" id="hudYear">Year 1</div></div></div>
+      <div class="daybar"><i id="dayFill"></i></div>
+      <div class="ctrls">
+        <button class="spdbtn" data-spd="0" onclick="setSpeed(0)">⏸</button>
+        <button class="spdbtn" data-spd="1" onclick="setSpeed(1)">1×</button>
+        <button class="spdbtn" data-spd="2" onclick="setSpeed(2)">2×</button>
+        <button class="spdbtn" data-spd="4" onclick="setSpeed(4)">4×</button>
+        <button class="spdbtn filesb" onclick="backToFiles()">📁 Files</button>
+      </div>
     </div>
     <div id="resbar"></div>
+    <span class="yearline" id="hudSave">💾 Saved</span>
   </div>
   <div id="questBanner"></div>
   <div id="mapWrap" class="day"></div>
@@ -118,561 +119,388 @@
     <button data-tab="settings"><span class="tic">⚙️</span>Settings</button>
   </div>
 </div>
-
 <script>
 "use strict";
-/* ================= City Simulator — GitHub edition (browser saves) ================= */
-const SAVE_KEY = "citysim_github_v1";
-const DAY_MS = 12000;
-const NAMES = ["Zara","Finn","Seamus","Tara","Luna","Kai","Milo","Ivy","Rex","Noor","Elif","Bram","Sana","Otto","Priya","Hugo","Mira","Dario","Lena","Yusuf","Ana","Cole","Ruth","Ezra","Nia","Sol","Uma","Vera","Wade","Xiu"];
-const FOODS = 0; // index helper not used
+const SAVE_KEY="citysim_github_v1",DAY_MS=12000;
+const NAMES=["Zara","Finn","Seamus","Tara","Luna","Kai","Milo","Ivy","Rex","Noor","Elif","Bram","Sana","Otto","Priya","Hugo","Mira","Dario","Lena","Yusuf","Ana","Cole","Ruth","Ezra","Nia","Sol","Uma","Vera","Wade","Xiu"];
+const ERAS=["Stone Age","Village Age","Bronze Age","Industrial Age","Sky Age"];
+const JOBS={gatherer:{name:"Gatherer",icon:"🧺"},woodcutter:{name:"Woodcutter",icon:"🪓"},hunter:{name:"Hunter",icon:"🏹"},fisher:{name:"Fisher",icon:"🎣"},farmer:{name:"Farmer",icon:"🌾",need:"farm"},builder:{name:"Builder",icon:"🔨"},researcher:{name:"Researcher",icon:"🔬"},warrior:{name:"Warrior",icon:"⚔️"},teacher:{name:"Teacher",icon:"📚",need:"school"},student:{name:"Student",icon:"🎒"},doctor:{name:"Doctor",icon:"🩺",need:"hospital",era:3},nurse:{name:"Nurse",icon:"💉",need:"hospital",era:3},cook:{name:"Cook",icon:"👨‍🍳",need:"restaurant",era:3},firefighter:{name:"Firefighter",icon:"🧑‍🚒",need:"firestation",era:3},officer:{name:"Officer",icon:"👮",need:"policestation",era:3},clergy:{name:"Clergy",icon:"🙏",need:"church",era:3}};
+const BUILDINGS={tent:{name:"Tent",icon:"⛺",cost:{wood:10},home:2,tier:0},hut:{name:"Hut",icon:"🛖",cost:{wood:25,stone:5},home:3,tier:1,upgradeFrom:"tent"},house:{name:"House",icon:"🏠",cost:{wood:40,stone:25},home:4,tier:2,upgradeFrom:"hut"},skyloft:{name:"Sky Loft",icon:"🏙️",cost:{wood:60,stone:50,metal:20},home:5,tier:3,upgradeFrom:"house",era:4},campfire:{name:"Campfire",icon:"🔥",cost:{wood:8,stone:4}},farm:{name:"Farm",icon:"🌾",cost:{wood:20}},well:{name:"Well",icon:"🪣",cost:{stone:15}},granary:{name:"Granary",icon:"🏚️",cost:{wood:30,stone:10}},school:{name:"School",icon:"🛖",cost:{wood:35,stone:10},big:true},library:{name:"Library",icon:"📖",cost:{wood:45,stone:20},era:2},training:{name:"Training Grounds",icon:"🎯",cost:{wood:30,stone:15},era:1},park:{name:"Park",icon:"🌳",cost:{wood:15},era:1},church:{name:"Church",icon:"⛪",cost:{wood:60,stone:40},era:3},restaurant:{name:"Restaurant",icon:"🍽️",cost:{wood:55,stone:30},era:3},firestation:{name:"Fire Station",icon:"🚒",cost:{wood:60,stone:45},era:3},policestation:{name:"Police Station",icon:"🚓",cost:{wood:60,stone:45},era:3},hospital:{name:"Hospital",icon:"🏥",cost:{wood:70,stone:55},era:3},factory:{name:"Factory",icon:"🏭",cost:{wood:80,stone:60,metal:25},era:3},powerplant:{name:"Power Plant",icon:"⚡",cost:{wood:70,stone:60,metal:35},era:3},university:{name:"University",icon:"🎓",cost:{wood:110,stone:90,metal:30},era:4},skyport:{name:"Skyport",icon:"🛸",cost:{wood:90,stone:80,metal:60},era:4}};
+const RESEARCH=[{id:"fire",name:"Fire Mastery",era:0,days:4,desc:"Campfires keep everyone warm. +morale"},{id:"tools",name:"Stone Tools",era:0,days:5,desc:"Woodcutters and gatherers work 30% faster"},{id:"farming",name:"Farming",era:0,days:6,desc:"Unlocks Farms and Farmers"},{id:"building",name:"Construction",era:0,days:6,desc:"Unlocks Huts and Wells"},{id:"wheel",name:"The Wheel",era:1,days:6,desc:"Builders work 30% faster"},{id:"education",name:"Education",era:1,days:7,desc:"Unlocks the School — education past level 2"},{id:"bronze",name:"Bronze Working",era:1,days:8,desc:"Unlocks metal and the Bronze Age",toEra:2},{id:"writing",name:"Writing",era:2,days:8,desc:"Unlocks the Library; research 25% faster"},{id:"math",name:"Mathematics",era:2,days:9,desc:"Everyone works 15% faster"},{id:"medicine0",name:"Herbal Medicine",era:2,days:8,desc:"Sick villagers recover faster"},{id:"engineering",name:"Engineering",era:2,days:10,desc:"Unlocks the modern era: money, church, hospital, fire & police",toEra:3},{id:"medicine",name:"Medicine",era:3,days:10,desc:"Doctors and nurses heal much faster"},{id:"computers",name:"Computers",era:3,days:11,desc:"Research 50% faster"},{id:"flight",name:"Flight",era:3,days:12,desc:"Unlocks the Sky Age",toEra:4},{id:"ecology",name:"Ecology",era:4,days:12,desc:"Farms and gatherers produce 30% more"},{id:"spaceflight",name:"Spaceflight",era:4,days:14,desc:"The final research. Your city touches the stars ⭐"}];
+const RELIGIONS=["Sun Path","Moon Temple","River Spirits","Star Watchers","Earth Keepers","Sky Choir","Ember Faith","Tide Callers","Stone Circle","Light Bearers"];
+const QUESTS=[
+{id:"q1",name:"First Timber",desc:"Have 30 wood",check:s=>s.res.wood>=30,reward:{wood:10}},
+{id:"q2",name:"Full Bellies",desc:"Have 30 food",check:s=>s.res.food>=30,reward:{food:10}},
+{id:"q3",name:"A Growing Village",desc:"Reach 10 people",check:s=>s.people.filter(p=>p.alive).length>=10,reward:{wood:20}},
+{id:"q4",name:"Warm Hearth",desc:"Build a Campfire",check:s=>has(s,"campfire"),reward:{food:15}},
+{id:"q5",name:"First Farm",desc:"Research Farming and build a Farm",check:s=>has(s,"farm"),reward:{food:20}},
+{id:"q6",name:"Shelter For All",desc:"Have 3 Huts or better",check:s=>s.buildings.filter(b=>["hut","house","skyloft"].includes(b.type)).length>=3,reward:{stone:15}},
+{id:"q7",name:"First Discovery",desc:"Finish 3 research projects",check:s=>Object.keys(s.researchDone).length>=3,reward:{knowledge:15}},
+{id:"q8",name:"Survive a Raid",desc:"Survive a raid",check:s=>s.raidsSurvived>=1,reward:{wood:25}},
+{id:"q9",name:"Bronze Age",desc:"Reach the Bronze Age",check:s=>s.era>=2,reward:{metal:15}},
+{id:"q10",name:"School Days",desc:"Build a School",check:s=>has(s,"school"),reward:{knowledge:20}},
+{id:"q11",name:"Book Smart",desc:"Build a Library",check:s=>has(s,"library"),reward:{knowledge:25}},
+{id:"q12",name:"Modern Times",desc:"Reach the Industrial Age",check:s=>s.era>=3,reward:{money:50}},
+{id:"q13",name:"City Services",desc:"Build a Hospital, Fire Station and Police Station",check:s=>has(s,"hospital")&&has(s,"firestation")&&has(s,"policestation"),reward:{money:75}},
+{id:"q14",name:"Faith & Food",desc:"Build a Church and a Restaurant",check:s=>has(s,"church")&&has(s,"restaurant"),reward:{money:60}},
+{id:"q15",name:"Sky High",desc:"Reach the Sky Age",check:s=>s.era>=4,reward:{metal:40}},
+{id:"q16",name:"To The Stars",desc:"Finish Spaceflight — the final quest ⭐",check:s=>!!s.researchDone.spaceflight,reward:{money:200}}];
+function has(s,t){return s.buildings.some(b=>b.type===t&&!b.building)}
 
-const ERAS = ["Stone Age","Village Age","Bronze Age","Industrial Age","Sky Age"];
-const JOBS = {
-  gatherer:  { name:"Gatherer",   icon:"🧺" },
-  woodcutter:{ name:"Woodcutter", icon:"🪓" },
-  hunter:    { name:"Hunter",     icon:"🏹" },
-  fisher:    { name:"Fisher",     icon:"🎣" },
-  farmer:    { name:"Farmer",     icon:"🌾", need:"farm" },
-  builder:   { name:"Builder",    icon:"🔨" },
-  researcher:{ name:"Researcher", icon:"🔬" },
-  warrior:   { name:"Warrior",    icon:"⚔️" },
-  teacher:   { name:"Teacher",    icon:"📚", need:"school" },
-  student:   { name:"Student",    icon:"🎒" },
-  doctor:    { name:"Doctor",     icon:"🩺", need:"hospital", era:3 },
-  nurse:     { name:"Nurse",      icon:"💉", need:"hospital", era:3 },
-  cook:      { name:"Cook",       icon:"👨‍🍳", need:"restaurant", era:3 },
-  firefighter:{ name:"Firefighter", icon:"🧑‍🚒", need:"firestation", era:3 },
-  officer:   { name:"Officer",    icon:"👮", need:"policestation", era:3 },
-  clergy:    { name:"Clergy",     icon:"🙏", need:"church", era:3 }
-};
-const BUILDINGS = {
-  tent:      { name:"Tent",       icon:"⛺", cost:{wood:10}, home:2, tier:0 },
-  hut:       { name:"Hut",        icon:"🛖", cost:{wood:25,stone:5}, home:3, tier:1, upgradeFrom:"tent" },
-  house:     { name:"House",      icon:"🏠", cost:{wood:40,stone:25}, home:4, tier:2, upgradeFrom:"hut" },
-  skyloft:   { name:"Sky Loft",   icon:"🏙️", cost:{wood:60,stone:50,metal:20}, home:5, tier:3, upgradeFrom:"house", era:4 },
-  campfire:  { name:"Campfire",   icon:"🔥", cost:{wood:8,stone:4} },
-  farm:      { name:"Farm",       icon:"🌾", cost:{wood:20} },
-  well:      { name:"Well",       icon:"🪣", cost:{stone:15} },
-  granary:   { name:"Granary",    icon:"🏚️", cost:{wood:30,stone:10} },
-  school:    { name:"School",     icon:"🛖", cost:{wood:35,stone:10}, big:true },
-  library:   { name:"Library",    icon:"📖", cost:{wood:45,stone:20}, era:2 },
-  training:  { name:"Training Grounds", icon:"🎯", cost:{wood:30,stone:15}, era:1 },
-  park:      { name:"Park",       icon:"🌳", cost:{wood:15}, era:1 },
-  church:    { name:"Church",     icon:"⛪", cost:{wood:60,stone:40}, era:3 },
-  restaurant:{ name:"Restaurant", icon:"🍽️", cost:{wood:55,stone:30}, era:3 },
-  firestation:{ name:"Fire Station", icon:"🚒", cost:{wood:60,stone:45}, era:3 },
-  policestation:{ name:"Police Station", icon:"🚓", cost:{wood:60,stone:45}, era:3 },
-  hospital:  { name:"Hospital",   icon:"🏥", cost:{wood:70,stone:55}, era:3 },
-  factory:   { name:"Factory",    icon:"🏭", cost:{wood:80,stone:60,metal:25}, era:3 },
-  powerplant:{ name:"Power Plant", icon:"⚡", cost:{wood:70,stone:60,metal:35}, era:3 },
-  university:{ name:"University", icon:"🎓", cost:{wood:110,stone:90,metal:30}, era:4 },
-  skyport:   { name:"Skyport",    icon:"🛸", cost:{wood:90,stone:80,metal:60}, era:4 }
-};
-const RESEARCH = [
-  { id:"fire",       name:"Fire Mastery",   era:0, days:4,  desc:"Campfires keep everyone warm. +morale" },
-  { id:"tools",      name:"Stone Tools",    era:0, days:5,  desc:"Woodcutters and gatherers work 30% faster" },
-  { id:"farming",    name:"Farming",        era:0, days:6,  desc:"Unlocks Farms and Farmers" },
-  { id:"building",   name:"Construction",   era:0, days:6,  desc:"Unlocks Huts and Wells" },
-  { id:"wheel",      name:"The Wheel",      era:1, days:6,  desc:"Builders work 30% faster" },
-  { id:"education",  name:"Education",      era:1, days:7,  desc:"Unlocks the School — education past level 2" },
-  { id:"bronze",     name:"Bronze Working", era:1, days:8,  desc:"Unlocks metal and the Bronze Age", toEra:2 },
-  { id:"writing",    name:"Writing",        era:2, days:8,  desc:"Unlocks the Library; research 25% faster" },
-  { id:"math",       name:"Mathematics",    era:2, days:9,  desc:"Everyone works 15% faster" },
-  { id:"medicine0",  name:"Herbal Medicine",era:2, days:8,  desc:"Sick villagers recover faster" },
-  { id:"engineering",name:"Engineering",    era:2, days:10, desc:"Unlocks the modern era: money, church, hospital, fire & police", toEra:3 },
-  { id:"medicine",   name:"Medicine",       era:3, days:10, desc:"Doctors and nurses heal much faster" },
-  { id:"computers",  name:"Computers",      era:3, days:11, desc:"Research 50% faster" },
-  { id:"flight",     name:"Flight",         era:3, days:12, desc:"Unlocks the Sky Age", toEra:4 },
-  { id:"ecology",    name:"Ecology",        era:4, days:12, desc:"Farms and gatherers produce 30% more" },
-  { id:"spaceflight",name:"Spaceflight",    era:4, days:14, desc:"The final research. Your city touches the stars ⭐" }
-];
-const RELIGIONS = ["Sun Path","Moon Temple","River Spirits","Star Watchers","Earth Keepers","Sky Choir","Ember Faith","Tide Callers","Stone Circle","Light Bearers"];
-const QUESTS = [
-  { id:"q1",  name:"First Timber",    desc:"Have 30 wood",                 check:s=>s.res.wood>=30, reward:{wood:10} },
-  { id:"q2",  name:"Full Bellies",    desc:"Have 30 food",                 check:s=>s.res.food>=30, reward:{food:10} },
-  { id:"q3",  name:"A Growing Village", desc:"Reach 10 people",            check:s=>s.people.filter(p=>p.alive).length>=10, reward:{wood:20} },
-  { id:"q4",  name:"Warm Hearth",     desc:"Build a Campfire",             check:s=>has(s,"campfire"), reward:{food:15} },
-  { id:"q5",  name:"First Farm",      desc:"Research Farming and build a Farm", check:s=>has(s,"farm"), reward:{food:20} },
-  { id:"q6",  name:"Shelter For All", desc:"Have 3 Huts or better",        check:s=>s.buildings.filter(b=>["hut","house","skyloft"].includes(b.type)).length>=3, reward:{stone:15} },
-  { id:"q7",  name:"First Discovery", desc:"Finish 3 research projects",   check:s=>Object.keys(s.researchDone).length>=3, reward:{knowledge:15} },
-  { id:"q8",  name:"Survive a Raid",  desc:"Survive a raid",               check:s=>s.raidsSurvived>=1, reward:{wood:25} },
-  { id:"q9",  name:"Bronze Age",      desc:"Reach the Bronze Age",         check:s=>s.era>=2, reward:{metal:15} },
-  { id:"q10", name:"School Days",     desc:"Build a School",               check:s=>has(s,"school"), reward:{knowledge:20} },
-  { id:"q11", name:"Book Smart",      desc:"Build a Library",              check:s=>has(s,"library"), reward:{knowledge:25} },
-  { id:"q12", name:"Modern Times",    desc:"Reach the Industrial Age",     check:s=>s.era>=3, reward:{money:50} },
-  { id:"q13", name:"City Services",   desc:"Build a Hospital, Fire Station and Police Station", check:s=>has(s,"hospital")&&has(s,"firestation")&&has(s,"policestation"), reward:{money:75} },
-  { id:"q14", name:"Faith & Food",    desc:"Build a Church and a Restaurant", check:s=>has(s,"church")&&has(s,"restaurant"), reward:{money:60} },
-  { id:"q15", name:"Sky High",        desc:"Reach the Sky Age",            check:s=>s.era>=4, reward:{metal:40} },
-  { id:"q16", name:"To The Stars",    desc:"Finish Spaceflight — the final quest ⭐", check:s=>!!s.researchDone.spaceflight, reward:{money:200} }
-];
-function has(s,t){ return s.buildings.some(b=>b.type===t && !b.building); }
-</script>
-<script>
-/* ================= Engine ================= */
-let store = loadStore();
-let S = null;           // active game state
-let activeSlot = -1;
-let tab = "build";
-let selPerson = null;
-let tickTimer = null;
-let lastTick = 0;
-let raidFx = null;      // {raiders:[{x,y,hp,el}], t}
-let uidC = 1;
-
-function loadStore(){ try { const raw = localStorage.getItem(SAVE_KEY); if (raw) { const d = JSON.parse(raw); if (Array.isArray(d.slots)) return d; } } catch(e){} return { slots: [null,null,null,null,null] }; }
-function saveStore(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(store)); } catch(e){} }
-function fmt(n){ return Math.floor(n).toLocaleString(); }
-function $(id){ return document.getElementById(id); }
-function esc(t){ return String(t).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
-function toast(msg){ const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2600); }
-function log(msg){ if(!S) return; S.log.unshift("Year " + S.year + " — " + msg); S.log = S.log.slice(0, 40); renderLog(); }
-function renderLog(){ if(!S) return; if (tab === "log") renderPanel(); }
-
-function newPerson(age, x, y){
-  const used = S ? S.people.map(p=>p.name) : [];
-  let name = NAMES[Math.floor(Math.random()*NAMES.length)];
-  let guard = 0; while (used.includes(name) && guard++ < 50) name = NAMES[Math.floor(Math.random()*NAMES.length)] + " " + "ABCDEFGH"[Math.floor(Math.random()*8)] + ".";
-  const likes = {}, talent = {};
-  Object.keys(JOBS).forEach(j => { const r = Math.random(); likes[j] = r < 0.3 ? "love" : (r < 0.6 ? "chore" : "ok"); talent[j] = 0.7 + Math.random()*0.6; });
-  return { id: uidC++, name, age, job: age >= 18 ? "gatherer" : "kid", alive: true, x: x ?? 20+Math.random()*60, y: y ?? 62+Math.random()*28,
-    tx: 0, ty: 0, home: null, partner: null, edu: age >= 18 ? 10+Math.random()*25 : 0, skills: {}, likes, talent,
-    health: 100, downedUntil: 0, sick: 0, religion: null, bub: "", bubT: 0 };
+/* ---------- state ---------- */
+let store=loadStore(),S=null,activeSlot=-1,tab="build",selPerson=null,tickTimer=null,lastTick=0,raidFx=null,uidC=1;
+let hudAcc=0,stepAcc=0,prodCache=null,prodAt=0,lastResHtml="",view={z:1,x:0,y:0};
+const personEls=new Map(),bldgEls=new Map();
+function loadStore(){try{const r=localStorage.getItem(SAVE_KEY);if(r){const d=JSON.parse(r);if(Array.isArray(d.slots))return d}}catch(e){}return{slots:[null,null,null,null,null]}}
+function saveStore(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(store))}catch(e){}}
+const fmt=n=>Math.floor(n).toLocaleString(),$=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+function log(m){if(!S)return;S.log.unshift("Year "+S.year+" — "+m);S.log=S.log.slice(0,40);if(tab==="log")renderPanel()}
+function newPerson(age,x,y){
+  const used=S?S.people.map(p=>p.name):[];let name=NAMES[Math.floor(Math.random()*NAMES.length)],g=0;
+  while(used.includes(name)&&g++<50)name=NAMES[Math.floor(Math.random()*NAMES.length)]+" "+"ABCDEFGH"[Math.floor(Math.random()*8)]+".";
+  const likes={},talent={};
+  Object.keys(JOBS).forEach(j=>{const r=Math.random();likes[j]=r<.3?"love":r<.6?"chore":"ok";talent[j]=.7+Math.random()*.6});
+  return{id:uidC++,name,age,job:age>=18?"gatherer":"kid",alive:true,x:x??20+Math.random()*60,y:y??62+Math.random()*28,tx:0,ty:0,home:null,partner:null,edu:age>=18?10+Math.random()*25:0,skills:{},likes,talent,health:100,downedUntil:0,sick:0,religion:null};
 }
 function newGame(cityName){
-  uidC = 1;
-  const s = { cityName, year: 1, era: 0, dayFrac: 0, res: { wood: 40, food: 35, water: 30, stone: 10, knowledge: 0, metal: 0, money: 0 },
-    people: [], buildings: [], researchDone: {}, researchSaved: {}, researchActive: null, researchProgress: 0,
-    questIdx: 0, questsDone: {}, raidsSurvived: 0, log: [], speed: 1, manualJobs: false, jobCounts: {}, raidIn: 10, bornTotal: 0 };
-  S = s;
-  for (let i = 0; i < 6; i++) s.people.push(newPerson(19 + Math.floor(Math.random()*22)));
-  for (let i = 0; i < 3; i++) s.buildings.push({ id: uidC++, type: "tent", x: 10 + i*11, y: 26, building: false, progress: 1, tier: 0 });
-  assignHomes(); autoJobs();
-  log("🏕️ " + cityName + " is founded with 6 people and 3 tents.");
-  return s;
+  uidC=1;
+  const s={cityName,year:1,era:0,dayFrac:0,res:{wood:40,food:35,water:30,stone:10,knowledge:0,metal:0,money:0},people:[],buildings:[],researchDone:{},researchSaved:{},researchActive:null,researchProgress:0,questIdx:0,questsDone:{},raidsSurvived:0,log:[],speed:1,paused:false,manualJobs:false,jobCounts:{},raidIn:10,bornTotal:0};
+  S=s;
+  for(let i=0;i<6;i++)s.people.push(newPerson(19+Math.floor(Math.random()*22)));
+  for(let i=0;i<3;i++)s.buildings.push({id:uidC++,type:"tent",x:10+i*11,y:26,building:false,progress:1,tier:0});
+  assignHomes();autoJobs();log("🏕️ "+cityName+" is founded with 6 people and 3 tents.");return s;
 }
-function eduLevel(p){ const e = p.edu; return e >= 80 ? 4 : e >= 60 ? 3 : e >= 20 ? 2 : 1; }
-function eduName(l){ return ["","Unschooled","Schooled","Educated","Scholar"][l]; }
-function jobLevel(p, j){ const xp = (p.skills && p.skills[j]) || 0; return Math.min(5, 1 + Math.floor(Math.sqrt(xp / 12))); }
-function jobMult(p, j){ return 1 + (jobLevel(p, j) - 1) * 0.27; }
-function adults(){ return S.people.filter(p => p.alive && p.age >= 18 && S.year > (p.downedUntil||0) - 1); }
-function alive(){ return S.people.filter(p => p.alive); }
-function hasB(t){ return S.buildings.some(b => b.type === t && !b.building); }
-function countB(t){ return S.buildings.filter(b => b.type === t && !b.building).length; }
-
-function jobAvailable(j){
-  const d = JOBS[j]; if (!d) return false;
-  if (d.era !== undefined && S.era < d.era) return false;
-  if (d.need && !hasB(d.need)) return false;
-  return true;
-}
+const eduLevel=p=>p.edu>=80?4:p.edu>=60?3:p.edu>=20?2:1;
+const eduName=l=>["","Unschooled","Schooled","Educated","Scholar"][l];
+const jobLevel=(p,j)=>Math.min(5,1+Math.floor(Math.sqrt(((p.skills&&p.skills[j])||0)/12)));
+const jobMult=(p,j)=>1+(jobLevel(p,j)-1)*.27;
+const alive=()=>S.people.filter(p=>p.alive);
+const hasB=t=>S.buildings.some(b=>b.type===t&&!b.building);
+const countB=t=>S.buildings.filter(b=>b.type===t&&!b.building).length;
+function jobAvailable(j){const d=JOBS[j];if(!d)return false;if(d.era!==undefined&&S.era<d.era)return false;if(d.need&&!hasB(d.need))return false;return true}
+const scoreFor=(p,j)=>jobLevel(p,j)*2+(p.talent[j]||1)+(p.likes[j]==="love"?1.5:p.likes[j]==="chore"?-1:0);
 function autoJobs(){
-  if (!S || S.manualJobs) { applyManualJobs(); return; }
-  const ps = alive();
-  ps.forEach(p => { if (p.age < 6) p.job = "kid"; });
-  const workers = ps.filter(p => p.age >= 18);
-  const kids = ps.filter(p => p.age >= 6 && p.age < 18);
-  kids.forEach(p => p.job = hasB("school") ? "student" : "kid");
-  const want = [];
-  const push = (j, n) => { for (let i = 0; i < n; i++) want.push(j); };
-  const n = workers.length;
-  push("gatherer", Math.max(1, Math.round(n * 0.18)));
-  push("woodcutter", Math.max(1, Math.round(n * 0.18)));
-  push("hunter", Math.max(1, Math.round(n * 0.12)));
-  if (hasB("farm")) push("farmer", Math.max(1, Math.round(n * 0.16)));
-  else push("fisher", Math.max(1, Math.round(n * 0.10)));
-  if (S.buildings.some(b => b.building)) push("builder", Math.max(1, Math.round(n * 0.16)));
-  if (S.researchActive) push("researcher", Math.max(1, Math.round(n * 0.14)));
-  push("warrior", S.raidIn <= 3 ? Math.max(1, Math.round(n * 0.14)) : Math.max(0, Math.round(n * 0.06)));
-  if (hasB("school")) push("teacher", 1);
-  ["doctor","nurse","cook","firefighter","officer","clergy"].forEach(j => { if (jobAvailable(j)) push(j, 1); });
-  const pool = workers.slice();
-  // survival guarantee: one woodcutter + one food gatherer first
-  const give = (j) => { const i = pool.findIndex(p => p.job !== "warrior"); if (i >= 0) { pool[i].job = j; pool.splice(i,1); } };
-  workers.forEach(p => p.job = "gatherer");
-  const order = want.filter((v,i)=>want.indexOf(v)===i);
-  order.forEach(j => { const c = want.filter(x=>x===j).length; for (let k = 0; k < c && pool.length; k++) {
-    pool.sort((a,b) => scoreFor(b,j) - scoreFor(a,j));
-    const p = pool.shift(); if (p) p.job = j;
-  }});
-  if (!workers.some(p => p.job === "woodcutter") && workers.length) workers[0].job = "woodcutter";
-  if (!workers.some(p => ["gatherer","hunter","fisher","farmer"].includes(p.job)) && workers.length > 1) workers[1].job = "gatherer";
+  prodCache=null;
+  if(!S)return;if(S.manualJobs){applyManualJobs();return}
+  const ps=alive();ps.forEach(p=>{if(p.age<6)p.job="kid"});
+  const workers=ps.filter(p=>p.age>=18);
+  ps.filter(p=>p.age>=6&&p.age<18).forEach(p=>p.job=hasB("school")?"student":"kid");
+  const want=[],push=(j,n)=>{for(let i=0;i<n;i++)want.push(j)},n=workers.length,r=x=>Math.max(1,Math.round(n*x));
+  push("gatherer",r(.18));push("woodcutter",r(.18));push("hunter",r(.12));
+  if(hasB("farm"))push("farmer",r(.16));else push("fisher",r(.10));
+  if(S.buildings.some(b=>b.building))push("builder",r(.16));
+  if(S.researchActive)push("researcher",r(.14));
+  push("warrior",S.raidIn<=3?r(.14):Math.round(n*.06));
+  if(hasB("school"))push("teacher",1);
+  ["doctor","nurse","cook","firefighter","officer","clergy"].forEach(j=>{if(jobAvailable(j))push(j,1)});
+  const pool=workers.slice();workers.forEach(p=>p.job="gatherer");
+  [...new Set(want)].forEach(j=>{const c=want.filter(x=>x===j).length;for(let k=0;k<c&&pool.length;k++){pool.sort((a,b)=>scoreFor(b,j)-scoreFor(a,j));pool.shift().job=j}});
+  if(!workers.some(p=>p.job==="woodcutter")&&workers.length)workers[0].job="woodcutter";
+  if(!workers.some(p=>["gatherer","hunter","fisher","farmer"].includes(p.job))&&workers.length>1)workers[1].job="gatherer";
 }
-function scoreFor(p, j){ return jobLevel(p,j) * 2 + (p.talent[j]||1) + (p.likes[j] === "love" ? 1.5 : p.likes[j] === "chore" ? -1 : 0); }
 function applyManualJobs(){
-  if (!S || !S.manualJobs) return;
-  const workers = alive().filter(p => p.age >= 18);
-  const counts = Object.assign({}, S.jobCounts);
-  workers.forEach(p => p.job = "gatherer");
-  Object.keys(counts).forEach(j => {
-    if (!jobAvailable(j) && j !== "gatherer") counts[j] = 0;
-    let c = counts[j] || 0;
-    const cand = workers.filter(p => p.job === "gatherer" && j !== "gatherer").sort((a,b)=>scoreFor(b,j)-scoreFor(a,j));
-    if (j === "gatherer") return;
-    for (let k = 0; k < c && cand.length; k++) cand[k].job = j;
+  if(!S||!S.manualJobs)return;
+  const workers=alive().filter(p=>p.age>=18);workers.forEach(p=>p.job="gatherer");
+  Object.keys(S.jobCounts).forEach(j=>{
+    if(j==="gatherer")return;let c=jobAvailable(j)?S.jobCounts[j]||0:0;
+    const cand=workers.filter(p=>p.job==="gatherer").sort((a,b)=>scoreFor(b,j)-scoreFor(a,j));
+    for(let k=0;k<c&&k<cand.length;k++)cand[k].job=j;
   });
-  alive().forEach(p => { if (p.age >= 6 && p.age < 18) p.job = hasB("school") ? "student" : "kid"; if (p.age < 6) p.job = "kid"; });
+  alive().forEach(p=>{if(p.age>=6&&p.age<18)p.job=hasB("school")?"student":"kid";if(p.age<6)p.job="kid"});
+  prodCache=null;
 }
 function assignHomes(){
-  const homes = S.buildings.filter(b => !b.building && BUILDINGS[b.type].home);
-  S.people.forEach(p => p.home = null);
-  let hi = 0;
-  alive().forEach(p => { while (hi < homes.length && S.people.filter(q => q.home === homes[hi].id).length >= BUILDINGS[homes[hi].type].home) hi++; if (hi < homes.length) p.home = homes[hi].id; });
+  const homes=S.buildings.filter(b=>!b.building&&BUILDINGS[b.type].home);S.people.forEach(p=>p.home=null);let hi=0;
+  alive().forEach(p=>{while(hi<homes.length&&S.people.filter(q=>q.home===homes[hi].id).length>=BUILDINGS[homes[hi].type].home)hi++;if(hi<homes.length)p.home=homes[hi].id});
 }
-</script>
-<script>
-/* ================= Simulation ================= */
+
+/* ---------- simulation ---------- */
 function productionPerDay(){
-  const out = { wood: 0, food: 0, water: 0, stone: 0, knowledge: 0, metal: 0, money: 0 };
-  const toolBonus = S.researchDone.tools ? 1.3 : 1;
-  const mathBonus = S.researchDone.math ? 1.15 : 1;
-  const ecoBonus = S.researchDone.ecology ? 1.3 : 1;
-  alive().filter(p => p.age >= 18).forEach(p => {
-    const m = jobMult(p, p.job) * mathBonus;
-    switch (p.job) {
-      case "woodcutter": out.wood += 7 * m * toolBonus; break;
-      case "gatherer": out.food += 4.2 * m * toolBonus * ecoBonus; out.wood += 1.2 * m; break;
-      case "hunter": out.food += 6 * m; break;
-      case "fisher": out.food += 5.4 * m; break;
-      case "farmer": out.food += 8 * m * ecoBonus; break;
-      case "researcher": out.knowledge += 3.4 * m; break;
-      case "cook": out.food += 2 * m; out.money += S.era >= 3 ? 4 * m : 0; break;
-      case "doctor": case "nurse": out.money += S.era >= 3 ? 2.5 * m : 0; break;
-      case "firefighter": case "officer": case "clergy": out.money += S.era >= 3 ? 1.6 * m : 0; break;
+  const o={wood:0,food:0,water:0,stone:0,knowledge:0,metal:0,money:0},rd=S.researchDone;
+  const tb=rd.tools?1.3:1,mb=rd.math?1.15:1,eb=rd.ecology?1.3:1,ps=alive();
+  ps.filter(p=>p.age>=18).forEach(p=>{
+    const m=jobMult(p,p.job)*mb;
+    switch(p.job){
+      case"woodcutter":o.wood+=7*m*tb;break;
+      case"gatherer":o.food+=4.2*m*tb*eb;o.wood+=1.2*m;break;
+      case"hunter":o.food+=6*m;break;case"fisher":o.food+=5.4*m;break;case"farmer":o.food+=8*m*eb;break;
+      case"researcher":o.knowledge+=3.4*m;break;
+      case"cook":o.food+=2*m;if(S.era>=3)o.money+=4*m;break;
+      case"doctor":case"nurse":if(S.era>=3)o.money+=2.5*m;break;
+      case"firefighter":case"officer":case"clergy":if(S.era>=3)o.money+=1.6*m;break;
     }
   });
-  out.water += 6 + countB("well") * 14 + alive().length * 0.4;
-  if (S.era >= 2) out.metal += countB("training") * 0 + (S.researchDone.bronze ? alive().filter(p=>p.job==="woodcutter").length * 0.5 : 0);
-  if (hasB("factory")) out.money += 9; if (hasB("skyport")) out.money += 16;
-  if (hasB("powerplant")) { out.money += 4; }
-  return out;
+  o.water+=6+countB("well")*14+ps.length*.4;
+  if(S.era>=2&&rd.bronze)o.metal+=ps.filter(p=>p.job==="woodcutter").length*.5;
+  if(hasB("factory"))o.money+=9;if(hasB("skyport"))o.money+=16;if(hasB("powerplant"))o.money+=4;
+  return o;
 }
-function gainXp(p, j, amt){
-  if (!p.skills) p.skills = {};
-  const like = p.likes[j] === "love" ? 1.4 : p.likes[j] === "chore" ? 0.6 : 1;
-  p.skills[j] = (p.skills[j] || 0) + amt * like * (p.talent[j] || 1) * (0.7 + eduLevel(p) * 0.15);
+function gainXp(p,j,a){
+  if(!p.skills)p.skills={};
+  p.skills[j]=(p.skills[j]||0)+a*(p.likes[j]==="love"?1.4:p.likes[j]==="chore"?.6:1)*(p.talent[j]||1)*(.7+eduLevel(p)*.15);
 }
 function dayRollover(){
-  S.year++; S.raidIn--;
-  const ps = alive();
-  // eat & drink
-  S.res.food -= ps.length * 1.0; S.res.water -= ps.length * 0.8;
-  let starving = false;
-  if (S.res.food < 0) { S.res.food = 0; starving = true; }
-  if (S.res.water < 0) { S.res.water = 0; starving = true; }
-  if (starving) { ps.forEach(p => p.health -= 12); log("⚠️ Not enough food or water — people are going hungry!"); }
-  // aging
-  ps.forEach(p => { p.age++; if (p.age > 68 && Math.random() < (p.age - 68) * 0.012) { p.alive = false; log("🕯️ " + p.name + " passed away at " + p.age + "."); } if (p.health <= 0) { p.health = 25; } });
-  // healing
-  ps.forEach(p => { const care = (hasB("hospital") ? 14 : 4) + (alive().some(q=>q.job==="doctor") ? 10 : 0) + (alive().some(q=>q.job==="nurse") ? 6 : 0); if (p.health < 100) p.health = Math.min(100, p.health + care * (S.researchDone.medicine ? 1.6 : 1)); });
-  // couples & babies
-  const singles = ps.filter(p => p.age >= 20 && p.age <= 45 && !p.partner);
-  for (let i = 0; i + 1 < singles.length; i += 2) { if (Math.random() < 0.5) { singles[i].partner = singles[i+1].id; singles[i+1].partner = singles[i].id; } }
-  const homesCap = S.buildings.filter(b => !b.building && BUILDINGS[b.type].home).reduce((a,b) => a + BUILDINGS[b.type].home, 0);
-  if (ps.length < homesCap + 2) {
-    const couples = ps.filter(p => p.partner && p.age >= 21 && p.age <= 42);
-    if (couples.length && Math.random() < 0.45) { const mom = couples[0]; const baby = newPerson(0, mom.x, mom.y); S.people.push(baby); S.bornTotal++; log("👶 " + baby.name + " was born!"); }
-  }
-  // education
-  const cap = hasB("school") ? 100 : 59;
-  ps.forEach(p => {
-    if (p.job === "student") p.edu = Math.min(cap, p.edu + (alive().some(q=>q.job==="teacher") ? 9 : 5));
-    else if (p.age >= 18) p.edu = Math.min(cap, p.edu + 0.7);
-  });
-  // research strikes
-  S.strikeToday = [];
-  if (S.researchActive) {
-    alive().filter(p => p.job === "researcher").forEach(p => { const c = p.likes.researcher === "chore" ? 0.38 : p.likes.researcher === "love" ? 0.06 : 0.16; if (Math.random() < c) S.strikeToday.push(p.id); });
-    if (S.strikeToday.length) log("🥱 " + S.strikeToday.map(id => (S.people.find(p=>p.id===id)||{}).name).join(", ") + " doesn't feel like researching today.");
-  }
-  // money era tax
-  if (S.era >= 3) S.res.money += ps.length * 1.5;
-  // raid
-  if (S.raidIn <= 0) { startRaid(); S.raidIn = 10; }
-  autoJobs(); assignHomes(); checkQuests(); saveGame(false); renderAll();
+  S.year++;S.raidIn--;const ps=alive();
+  S.res.food-=ps.length;S.res.water-=ps.length*.8;let starving=false;
+  if(S.res.food<0){S.res.food=0;starving=true}if(S.res.water<0){S.res.water=0;starving=true}
+  if(starving){ps.forEach(p=>p.health-=12);log("⚠️ Not enough food or water — people are going hungry!")}
+  ps.forEach(p=>{p.age++;if(p.age>68&&Math.random()<(p.age-68)*.012){p.alive=false;log("🕯️ "+p.name+" passed away at "+p.age+".")}if(p.health<=0)p.health=25});
+  const A=alive(),doc=A.some(q=>q.job==="doctor"),nur=A.some(q=>q.job==="nurse"),care=(hasB("hospital")?14:4)+(doc?10:0)+(nur?6:0);
+  A.forEach(p=>{if(p.health<100)p.health=Math.min(100,p.health+care*(S.researchDone.medicine?1.6:1))});
+  const singles=A.filter(p=>p.age>=20&&p.age<=45&&!p.partner);
+  for(let i=0;i+1<singles.length;i+=2)if(Math.random()<.5){singles[i].partner=singles[i+1].id;singles[i+1].partner=singles[i].id}
+  const cap=S.buildings.filter(b=>!b.building&&BUILDINGS[b.type].home).reduce((a,b)=>a+BUILDINGS[b.type].home,0);
+  if(A.length<cap+2){const c=A.filter(p=>p.partner&&p.age>=21&&p.age<=42);
+    if(c.length&&Math.random()<.45){const baby=newPerson(0,c[0].x,c[0].y);S.people.push(baby);S.bornTotal++;log("👶 "+baby.name+" was born!");toast("👶 "+baby.name+" was born!")}}
+  const ecap=hasB("school")?100:59,teach=A.some(q=>q.job==="teacher");
+  A.forEach(p=>{if(p.job==="student")p.edu=Math.min(ecap,p.edu+(teach?9:5));else if(p.age>=18)p.edu=Math.min(ecap,p.edu+.7)});
+  S.strikeToday=[];
+  if(S.researchActive){A.filter(p=>p.job==="researcher").forEach(p=>{if(Math.random()<(p.likes.researcher==="chore"?.38:p.likes.researcher==="love"?.06:.16))S.strikeToday.push(p.id)});
+    if(S.strikeToday.length)log("🥱 "+S.strikeToday.map(id=>(S.people.find(p=>p.id===id)||{}).name).join(", ")+" doesn't feel like researching today.")}
+  if(S.era>=3)S.res.money+=A.length*1.5;
+  if(S.raidIn<=0){startRaid();S.raidIn=10}
+  autoJobs();assignHomes();checkQuests();saveGame(false);renderAll();
 }
 function checkQuests(){
-  let moved = true;
-  while (moved) { moved = false; const q = QUESTS[S.questIdx]; if (q && q.check(S)) { Object.keys(q.reward).forEach(k => S.res[k] = (S.res[k]||0) + q.reward[k]); S.questsDone[q.id] = true; log("📜 Quest complete: " + q.name + "!"); toast("📜 Quest complete: " + q.name); S.questIdx++; moved = true; } }
+  for(;;){const q=QUESTS[S.questIdx];if(!(q&&q.check(S)))break;
+    Object.keys(q.reward).forEach(k=>S.res[k]=(S.res[k]||0)+q.reward[k]);S.questsDone[q.id]=true;log("📜 Quest complete: "+q.name+"!");toast("📜 Quest complete: "+q.name);S.questIdx++}
 }
 function startRaid(){
-  const fighters = alive().filter(p => p.age >= 18);
-  const n = Math.max(1, Math.min(4, Math.round(fighters.length * 0.35)));
-  raidFx = { t: 0, raiders: Array.from({length: n}, (_, i) => ({ x: -4 - i * 4, y: 30 + Math.random()*40, hp: 30, el: null })) };
-  log("⚔️ Raiders are attacking " + S.cityName + "!");
+  const f=alive().filter(p=>p.age>=18),n=Math.max(1,Math.min(4,Math.round(f.length*.35)));
+  raidFx={t:0,raiders:Array.from({length:n},(_,i)=>({x:-4-i*4,y:30+Math.random()*40,el:null}))};log("⚔️ Raiders are attacking "+S.cityName+"!");
 }
 function resolveRaid(){
-  const defs = alive().filter(p => p.age >= 18);
-  const warriors = defs.filter(p => p.job === "warrior");
-  const power = warriors.reduce((a,p) => a + jobMult(p,"warrior"), 0) + defs.length * 0.25;
-  const raidPower = raidFx ? raidFx.raiders.length * 1.1 : 1;
-  const knocked = [];
-  defs.forEach(p => { if (Math.random() < 0.4) { p.downedUntil = S.year + 1; p.health = Math.max(20, p.health - 25); knocked.push(p.name); } });
-  if (power >= raidPower) { S.raidsSurvived++; log("🛡️ The raid was driven off!" + (knocked.length ? " Knocked down: " + knocked.join(", ") + " (they'll recover)." : "")); }
-  else { const steal = Math.min(S.res.food, 12); S.res.food -= steal; S.res.wood = Math.max(0, S.res.wood - 8); S.raidsSurvived++; log("🏴 Raiders got away with some supplies." + (knocked.length ? " Knocked down: " + knocked.join(", ") + " (they'll recover)." : "")); }
-  warriors.forEach(p => gainXp(p, "warrior", 6));
-  raidFx = null; checkQuests();
+  const defs=alive().filter(p=>p.age>=18),war=defs.filter(p=>p.job==="warrior");
+  const power=war.reduce((a,p)=>a+jobMult(p,"warrior"),0)+defs.length*.25,rp=raidFx?raidFx.raiders.length*1.1:1,kn=[];
+  defs.forEach(p=>{if(Math.random()<.4){p.downedUntil=S.year+1;p.health=Math.max(20,p.health-25);kn.push(p.name)}});
+  const tail=kn.length?" Knocked down: "+kn.join(", ")+" (they'll recover).":"";
+  if(power>=rp)log("🛡️ The raid was driven off!"+tail);
+  else{S.res.food-=Math.min(S.res.food,12);S.res.wood=Math.max(0,S.res.wood-8);log("🏴 Raiders got away with some supplies."+tail)}
+  S.raidsSurvived++;war.forEach(p=>gainXp(p,"warrior",6));raidFx=null;checkQuests();
 }
 function tick(now){
-  if (!S) return;
-  const dt = Math.min(100, now - lastTick); lastTick = now;
-  const dayRate = (dt / DAY_MS) * (S.speed || 1);
-  S.dayFrac += dayRate;
-  // production
-  const prod = productionPerDay();
-  Object.keys(prod).forEach(k => S.res[k] += prod[k] * dayRate);
-  // building progress
-  const builders = alive().filter(p => p.job === "builder" && p.age >= 18);
-  S.buildings.filter(b => b.building).forEach((b, idx) => {
-    const crew = builders.filter((_, i) => i % Math.max(1, S.buildings.filter(x=>x.building).length) === idx);
-    const rate = crew.reduce((a,p) => a + jobMult(p,"builder"), 0) * (S.researchDone.wheel ? 1.3 : 1);
-    b.progress += (rate / 5) * dayRate; crew.forEach(p => gainXp(p, "builder", dayRate * 2));
-    if (b.progress >= 1) { b.building = false; b.progress = 1; log("🏠 " + BUILDINGS[b.type].name + " finished building!"); autoJobs(); assignHomes(); checkQuests(); }
-  });
-  // research progress
-  if (S.researchActive) {
-    const proj = RESEARCH.find(r => r.id === S.researchActive);
-    const workers = alive().filter(p => p.job === "researcher" && !(S.strikeToday||[]).includes(p.id));
-    const rate = workers.reduce((a,p) => a + jobMult(p,"researcher"), 0) * (S.researchDone.writing ? 1.25 : 1) * (S.researchDone.computers ? 1.5 : 1);
-    S.researchProgress += (rate / 3.2) * dayRate;
-    workers.forEach(p => gainXp(p, "researcher", dayRate * 2));
-    if (proj && S.researchProgress >= proj.days) {
-      S.researchDone[proj.id] = true; S.researchSaved[proj.id] = 0; S.researchProgress = 0;
-      log("🔬 Research complete: " + proj.name + "!");
-      toast("🔬 " + proj.name + " researched!");
-      if (proj.toEra !== undefined && proj.toEra > S.era) { S.era = proj.toEra; log("🌟 Welcome to the " + ERAS[S.era] + "!"); }
-      S.researchActive = null; autoJobs(); checkQuests();
+  if(!S)return;
+  const dt=Math.min(100,now-lastTick);lastTick=now;
+  if(S.paused)return;
+  const dr=(dt/DAY_MS)*(S.speed||1);S.dayFrac+=dr;
+  if(!prodCache||now-prodAt>500){prodCache=productionPerDay();prodAt=now}
+  Object.keys(prodCache).forEach(k=>S.res[k]+=prodCache[k]*dr);
+  const building=S.buildings.filter(b=>b.building);
+  if(building.length){
+    const builders=alive().filter(p=>p.job==="builder"&&p.age>=18);
+    building.forEach((b,idx)=>{
+      const crew=builders.filter((_,i)=>i%building.length===idx);
+      b.progress+=(crew.reduce((a,p)=>a+jobMult(p,"builder"),0)*(S.researchDone.wheel?1.3:1)/5)*dr;crew.forEach(p=>gainXp(p,"builder",dr*2));
+      if(b.progress>=1){b.building=false;b.progress=1;log("🏠 "+BUILDINGS[b.type].name+" finished building!");autoJobs();assignHomes();checkQuests()}
+    });
+  }
+  if(S.researchActive){
+    const proj=RESEARCH.find(r=>r.id===S.researchActive),w=alive().filter(p=>p.job==="researcher"&&!(S.strikeToday||[]).includes(p.id));
+    S.researchProgress+=(w.reduce((a,p)=>a+jobMult(p,"researcher"),0)*(S.researchDone.writing?1.25:1)*(S.researchDone.computers?1.5:1)/3.2)*dr;
+    w.forEach(p=>gainXp(p,"researcher",dr*2));
+    if(proj&&S.researchProgress>=proj.days){
+      S.researchDone[proj.id]=true;S.researchSaved[proj.id]=0;S.researchProgress=0;log("🔬 Research complete: "+proj.name+"!");toast("🔬 "+proj.name+" researched!");
+      if(proj.toEra!==undefined&&proj.toEra>S.era){S.era=proj.toEra;log("🌟 Welcome to the "+ERAS[S.era]+"!")}
+      S.researchActive=null;autoJobs();checkQuests();
     }
   }
-  // xp for workers
-  if (Math.random() < 0.3) alive().filter(p => p.age >= 18).forEach(p => gainXp(p, p.job, dayRate * 1.4));
-  // raid animation timer
-  if (raidFx) { raidFx.t += dt; if (raidFx.t > 6000) resolveRaid(); }
-  if (S.dayFrac >= 1) { S.dayFrac = 0; dayRollover(); }
-  renderMap(); renderHud();
+  if(Math.random()<.3)alive().filter(p=>p.age>=18).forEach(p=>gainXp(p,p.job,dr*1.4));
+  if(raidFx){raidFx.t+=dt;if(raidFx.t>6000)resolveRaid()}
+  if(S.dayFrac>=1){S.dayFrac=0;dayRollover()}
+  hudAcc+=dt;stepAcc+=dt;
+  if(hudAcc>250){hudAcc=0;renderHud()}
+  if(stepAcc>900){stepAcc=0;stepPeople()}
 }
-function startLoop(){ if (tickTimer) cancelAnimationFrame(tickTimer); lastTick = performance.now(); const loop = (t) => { tick(t); tickTimer = requestAnimationFrame(loop); }; tickTimer = requestAnimationFrame(loop); }
-function stopLoop(){ if (tickTimer) cancelAnimationFrame(tickTimer); tickTimer = null; }
-
-/* ================= Saving ================= */
+function startLoop(){if(tickTimer)cancelAnimationFrame(tickTimer);lastTick=performance.now();const loop=t=>{tick(t);tickTimer=requestAnimationFrame(loop)};tickTimer=requestAnimationFrame(loop)}
+function stopLoop(){if(tickTimer)cancelAnimationFrame(tickTimer);tickTimer=null}
 function saveGame(notify){
-  if (!S || activeSlot < 0) return;
-  store.slots[activeSlot] = { fileName: store.slots[activeSlot] ? store.slots[activeSlot].fileName : ("File " + (activeSlot+1)), savedAt: Date.now(), state: S };
-  saveStore();
-  const el = $("hudSave"); if (el) el.textContent = "💾 Saved " + new Date().toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
-  if (notify) toast("💾 Saved");
+  if(!S||activeSlot<0)return;
+  store.slots[activeSlot]={fileName:store.slots[activeSlot]?store.slots[activeSlot].fileName:"File "+(activeSlot+1),savedAt:Date.now(),state:S};saveStore();
+  const el=$("hudSave");if(el)el.textContent="💾 Saved "+new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+  if(notify)toast("💾 Saved");
 }
-setInterval(() => { if (S && activeSlot >= 0) saveGame(false); }, 5000);
-</script>
-<script>
-/* ================= Rendering ================= */
-const RESDEF = [["wood","🪵"],["food","🍖"],["water","💧"],["stone","🪨"],["knowledge","📚"],["metal","⛓️"],["money","💰"]];
-function renderHud(){
-  if (!S) return;
-  $("hudCity").textContent = "🏕️ " + S.cityName;
-  $("hudYear").textContent = "Year " + S.year + " · " + ERAS[S.era] + " · 👥 " + alive().length + " · ⚔️ raid in " + S.raidIn;
-  $("resbar").innerHTML = RESDEF.filter(([k]) => k !== "money" || S.era >= 3).filter(([k]) => k !== "metal" || S.era >= 2).map(([k, ic]) => {
-    const low = (k === "food" || k === "water") && S.res[k] < alive().length * 1.2;
-    return '<span class="chip' + (low ? " low" : "") + '">' + ic + " " + fmt(S.res[k]) + "</span>";
-  }).join("");
-  const q = QUESTS[S.questIdx];
-  $("questBanner").innerHTML = q ? "📜 <b>" + esc(q.name) + "</b> — " + esc(q.desc) : "📜 All quests complete — your city reached the stars ⭐";
-  const f = S.dayFrac;
-  $("mapWrap").className = f < 0.42 ? "day" : f < 0.58 ? "dusk" : f < 0.92 ? "night" : "dusk";
-}
-const personEls = new Map(), bldgEls = new Map();
-function renderMap(){
-  if (!S) return;
-  const mapEl = $("mapWrap");
-  let wrap = mapEl.querySelector("#world");
-  if (!wrap) { wrap = document.createElement("div"); wrap.id = "world"; wrap.style.cssText = "position:absolute;inset:0;transform-origin:0 0;"; mapEl.appendChild(wrap); applyView(); }
-  if (!mapEl.querySelector("#mapBtns")) { const mb = document.createElement("div"); mb.id = "mapBtns"; mb.style.cssText = "position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:20"; mb.innerHTML = '<button class="mbtn" onclick="zoomIn()">+</button><button class="mbtn" onclick="zoomOut()">\u2212</button><button class="mbtn" onclick="resetView()">🔥</button>'; mapEl.appendChild(mb); }
-  // connected street grid: horizontal avenues joined by vertical streets
-  if (!wrap.querySelector(".street")) {
-    [31, 49, 67].forEach(y => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;left:0;right:0;top:" + y + "%;height:10px;background:#8d8d84;border-top:1px solid rgba(255,255,255,.35);border-bottom:1px solid rgba(0,0,0,.3);pointer-events:none"; wrap.appendChild(st); });
-    [16, 49, 82].forEach(x => { const st = document.createElement("div"); st.className = "street"; st.style.cssText = "position:absolute;top:6%;height:70%;left:" + x + "%;width:10px;background:#8d8d84;border-left:1px solid rgba(255,255,255,.35);border-right:1px solid rgba(0,0,0,.3);pointer-events:none"; wrap.appendChild(st); });
-  }
-  // buildings
-  const seenB = new Set();
-  S.buildings.forEach(b => {
-    seenB.add(b.id);
-    let el = bldgEls.get(b.id);
-    if (!el) { el = document.createElement("div"); el.className = "bldg"; bldgEls.set(b.id, el); wrap.appendChild(el); }
-    el.style.left = b.x + "%"; el.style.top = b.y + "%";
-    const d = BUILDINGS[b.type];
-    if (b.building) {
-      const grow = 0.15 + 0.85 * (b.progress || 0);
-      el.innerHTML = '<div class="ic" style="transform: scaleY(' + grow.toFixed(2) + '); transform-origin: bottom center; opacity:' + (0.35 + 0.65 * (b.progress || 0)).toFixed(2) + '">' + d.icon + '</div><div class="frame">🏗️ building up…</div><div class="lb">' + esc(d.name) + '</div><div class="prog"><i style="width:' + Math.round(b.progress*100) + '%"></i></div>';
-    } else {
-      el.innerHTML = '<div class="ic" style="' + (d.big ? "font-size:42px" : "") + '">' + d.icon + '</div><div class="lb">' + esc(d.name) + "</div>";
-    }
-  });
-  bldgEls.forEach((el, id) => { if (!seenB.has(id)) { el.remove(); bldgEls.delete(id); } });
-  // people
-  const seenP = new Set();
-  alive().forEach(p => {
-    seenP.add(p.id);
-    let el = personEls.get(p.id);
-    if (!el) { el = document.createElement("div"); el.className = "person"; personEls.set(p.id, el); wrap.appendChild(el); }
-    if (Math.random() < 0.02 || (p.tx === 0 && p.ty === 0)) { p.tx = 6 + Math.random() * 88; p.ty = 14 + Math.random() * 56; }
-    const dx = p.tx - p.x, dy = p.ty - p.y, dist = Math.hypot(dx, dy);
-    if (dist < 2) { p.tx = 6 + Math.random() * 88; p.ty = 58 + Math.random() * 34; }
-    else { p.x += dx / dist * 0.55; p.y += dy / dist * 0.55; }
-    const downed = p.downedUntil && S.year < p.downedUntil;
-    const icon = p.age < 6 ? "👶" : p.age < 18 ? "🧒" : downed ? "💫" : (JOBS[p.job] ? JOBS[p.job].icon : "🧑");
-    const act = p.job === "woodcutter" ? "🪓" : p.job === "builder" ? "🔨" : p.job === "researcher" ? ((S.strikeToday||[]).includes(p.id) ? "🥱" : "📖") : p.job === "hunter" ? "🏹" : p.job === "fisher" ? "🎣" : p.job === "farmer" ? "🌾" : "";
-    el.style.left = p.x + "%"; el.style.top = p.y + "%";
-    el.innerHTML = '<div class="bub">' + (downed ? "💫" : act) + '</div><div class="ic">' + icon + '</div><div class="nm">' + esc(p.name) + "</div>";
-  });
-  personEls.forEach((el, id) => { if (!seenP.has(id)) { el.remove(); personEls.delete(id); } });
-  // raiders
-  wrap.querySelectorAll(".raider").forEach(e => e.remove());
-  if (raidFx) raidFx.raiders.forEach(r => { r.x += 0.5; const el = document.createElement("div"); el.className = "person raider"; el.style.left = Math.min(r.x, 92) + "%"; el.style.top = r.y + "%"; el.innerHTML = '<div class="ic">🥷</div><div class="nm">Raider</div>'; wrap.appendChild(el); });
-}
-function renderAll(){ renderHud(); renderMap(); renderLog(); renderPanel(); }
+setInterval(()=>{if(S&&activeSlot>=0)saveGame(false)},5000);
+document.addEventListener("visibilitychange",()=>{if(!S)return;if(document.hidden){saveGame(false);stopLoop()}else startLoop()});
 
-/* ================= Panels ================= */
-function costText(cost){ return Object.keys(cost).map(k => (RESDEF.find(r=>r[0]===k)||["",k])[1] + " " + cost[k]).join(" · "); }
-function canAfford(cost){ return Object.keys(cost).every(k => (S.res[k]||0) >= cost[k]); }
-function payCost(cost){ Object.keys(cost).forEach(k => S.res[k] -= cost[k]); }
+/* ---------- rendering ---------- */
+const RESDEF=[["wood","🪵"],["food","🍖"],["water","💧"],["stone","🪨"],["knowledge","📚"],["metal","⛓️"],["money","💰"]];
+function renderHud(){
+  if(!S)return;
+  $("hudCity").textContent=S.cityName;
+  $("hudYear").textContent="Year "+S.year+" · "+ERAS[S.era]+" · 👥 "+alive().length+" · ⚔️ raid in "+S.raidIn;
+  const html=RESDEF.filter(([k])=>(k!=="money"||S.era>=3)&&(k!=="metal"||S.era>=2)).map(([k,ic])=>{
+    const low=(k==="food"||k==="water")&&S.res[k]<alive().length*1.2;return'<span class="chip'+(low?" low":"")+'">'+ic+" "+fmt(S.res[k])+"</span>"}).join("");
+  if(html!==lastResHtml){lastResHtml=html;$("resbar").innerHTML=html}
+  const q=QUESTS[S.questIdx];
+  $("questBanner").innerHTML=q?"📜 <b>"+esc(q.name)+"</b> — "+esc(q.desc):"📜 All quests complete — your city reached the stars ⭐";
+  const f=S.dayFrac;$("mapWrap").className=f<.42?"day":f<.58?"dusk":f<.92?"night":"dusk";
+  $("dayFill").style.width=(f*100).toFixed(1)+"%";
+  document.querySelectorAll(".spdbtn[data-spd]").forEach(b=>b.classList.toggle("on",+b.dataset.spd===(S.paused?0:S.speed||1)));
+}
+function applyView(){const w=$("world");if(w)w.style.transform="translate("+view.x+"px,"+view.y+"px) scale("+view.z+")"}
+function ensureWorld(){
+  const m=$("mapWrap");let w=m.querySelector("#world");
+  if(!w){w=document.createElement("div");w.id="world";m.appendChild(w);applyView();
+    [31,49,67].forEach(y=>{const s=document.createElement("div");s.className="street";s.style.cssText="left:0;right:0;top:"+y+"%;height:8px";w.appendChild(s)});
+    [16,49,82].forEach(x=>{const s=document.createElement("div");s.className="street";s.style.cssText="top:6%;height:70%;left:"+x+"%;width:8px";w.appendChild(s)})}
+  if(!m.querySelector("#mapBtns")){const mb=document.createElement("div");mb.id="mapBtns";mb.innerHTML='<button class="mbtn" onclick="zoomIn()">+</button><button class="mbtn" onclick="zoomOut()">\u2212</button><button class="mbtn" onclick="resetView()">🔥</button>';m.appendChild(mb)}
+  return w;
+}
+function syncMap(){
+  if(!S)return;const wrap=ensureWorld(),seenB=new Set();
+  S.buildings.forEach(b=>{
+    seenB.add(b.id);let el=bldgEls.get(b.id);
+    if(!el){el=document.createElement("div");el.className="bldg";el.style.left=b.x+"%";el.style.top=b.y+"%";bldgEls.set(b.id,el);wrap.appendChild(el)}
+    const key=b.type+"|"+b.building+"|"+Math.round((b.progress||0)*25);if(el._k===key)return;el._k=key;
+    const d=BUILDINGS[b.type];
+    el.innerHTML=b.building?'<div class="ic" style="transform:scaleY('+(.15+.85*b.progress).toFixed(2)+');transform-origin:bottom center;opacity:'+(.35+.65*b.progress).toFixed(2)+'">'+d.icon+'</div><div class="frame">🏗️</div><div class="lb">'+esc(d.name)+'</div><div class="prog"><i style="width:'+Math.round(b.progress*100)+'%"></i></div>'
+      :'<div class="ic" style="'+(d.big?"font-size:42px":"")+'">'+d.icon+'</div><div class="lb">'+esc(d.name)+"</div>";
+  });
+  bldgEls.forEach((el,id)=>{if(!seenB.has(id)){el.remove();bldgEls.delete(id)}});
+  const seenP=new Set();
+  alive().forEach(p=>{
+    seenP.add(p.id);let el=personEls.get(p.id);
+    if(!el){el=document.createElement("div");el.className="person";el.style.left=p.x+"%";el.style.top=p.y+"%";personEls.set(p.id,el);wrap.appendChild(el)}
+    const downed=p.downedUntil&&S.year<p.downedUntil;
+    const icon=p.age<6?"👶":p.age<18?"🧒":downed?"💫":(JOBS[p.job]?JOBS[p.job].icon:"🧑");
+    const act={woodcutter:"🪓",builder:"🔨",hunter:"🏹",fisher:"🎣",farmer:"🌾"}[p.job]||(p.job==="researcher"?((S.strikeToday||[]).includes(p.id)?"🥱":"📖"):"");
+    const bub=downed?"💫":act,key=icon+"|"+bub+"|"+p.name;if(el._k===key)return;el._k=key;
+    el.innerHTML='<div class="bub">'+bub+'</div><div class="ic">'+icon+'</div><div class="nm">'+esc(p.name)+"</div>";
+  });
+  personEls.forEach((el,id)=>{if(!seenP.has(id)){el.remove();personEls.delete(id)}});
+}
+function stepPeople(){
+  if(!S)return;const wrap=ensureWorld();
+  alive().forEach(p=>{
+    if(Math.random()<.02||(p.tx===0&&p.ty===0)){p.tx=6+Math.random()*88;p.ty=14+Math.random()*56}
+    const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy);
+    if(dist<4){p.tx=6+Math.random()*88;p.ty=58+Math.random()*34}else{p.x+=dx/dist*5;p.y+=dy/dist*5}
+    const el=personEls.get(p.id);if(el){el.style.left=p.x+"%";el.style.top=p.y+"%"}
+  });
+  if(raidFx)raidFx.raiders.forEach(r=>{
+    r.x+=14;
+    if(!r.el){r.el=document.createElement("div");r.el.className="person raider";r.el.style.left="-4%";r.el.style.top=r.y+"%";r.el.innerHTML='<div class="ic">🥷</div><div class="nm">Raider</div>';wrap.appendChild(r.el);void r.el.offsetWidth}
+    r.el.style.left=Math.min(r.x,92)+"%";
+  });
+  else wrap.querySelectorAll(".raider").forEach(e=>e.remove());
+  syncMap();
+}
+function renderAll(){renderHud();syncMap();renderPanel()}
+
+/* ---------- panels ---------- */
+const costText=c=>Object.keys(c).map(k=>(RESDEF.find(r=>r[0]===k)||["",k])[1]+" "+c[k]).join(" · ");
+const canAfford=c=>Object.keys(c).every(k=>(S.res[k]||0)>=c[k]);
+const payCost=c=>Object.keys(c).forEach(k=>S.res[k]-=c[k]);
 function renderPanel(){
-  if (!S) return;
-  document.querySelectorAll("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
-  const P = $("panel");
-  if (tab === "build") {
-    let h = "";
-    Object.keys(BUILDINGS).forEach(t => {
-      const d = BUILDINGS[t];
-      if (d.upgradeFrom) return;
-      if (d.era !== undefined && S.era < d.era) { h += '<div class="card" style="opacity:.55"><h3>🔒 ' + d.name + '</h3><p>Unlocks in the ' + ERAS[d.era] + "</p></div>"; return; }
-      const n = countB(t) + S.buildings.filter(b=>b.type===t && b.building).length;
-      h += '<div class="card"><h3>' + d.icon + " " + d.name + (n ? ' <span class="small">× ' + n + "</span>" : "") + '</h3><p class="cost">Cost: ' + costText(d.cost) + (d.home ? " · 🏠 houses " + d.home : "") + '</p><div class="row"><button onclick="queueBuild(\'' + t + '\')" ' + (canAfford(d.cost) ? "" : "disabled") + ">Build</button></div></div>";
+  if(!S)return;
+  document.querySelectorAll("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.tab===tab&&document.body.classList.contains("sheet-open")));
+  if(!document.body.classList.contains("sheet-open"))return;
+  const P=$("panel");let h="";
+  if(tab==="build"){
+    Object.keys(BUILDINGS).forEach(t=>{
+      const d=BUILDINGS[t];if(d.upgradeFrom)return;
+      if(d.era!==undefined&&S.era<d.era){h+='<div class="card" style="opacity:.55"><h3>🔒 '+d.name+"</h3><p>Unlocks in the "+ERAS[d.era]+"</p></div>";return}
+      const n=S.buildings.filter(b=>b.type===t).length;
+      h+='<div class="card"><h3>'+d.icon+" "+d.name+(n?' <span class="small">× '+n+"</span>":"")+'</h3><p class="cost">Cost: '+costText(d.cost)+(d.home?" · 🏠 houses "+d.home:"")+'</p><div class="row"><button onclick="queueBuild(\''+t+'\')" '+(canAfford(d.cost)?"":"disabled")+">Build</button></div></div>";
     });
-    // upgrades
-    S.buildings.filter(b => !b.building).forEach(b => {
-      const up = Object.keys(BUILDINGS).find(t => BUILDINGS[t].upgradeFrom === b.type);
-      if (!up) return; const d = BUILDINGS[up];
-      if (d.era !== undefined && S.era < d.era) return;
-      h += '<div class="card"><h3>⬆️ Upgrade ' + BUILDINGS[b.type].name + " → " + d.name + '</h3><p class="cost">Cost: ' + costText(d.cost) + '</p><div class="row"><button onclick="queueUpgrade(' + b.id + ',\'' + up + '\')" ' + (canAfford(d.cost) ? "" : "disabled") + ">Upgrade</button></div></div>";
+    S.buildings.filter(b=>!b.building).forEach(b=>{
+      const up=Object.keys(BUILDINGS).find(t=>BUILDINGS[t].upgradeFrom===b.type);if(!up)return;const d=BUILDINGS[up];
+      if(d.era!==undefined&&S.era<d.era)return;
+      h+='<div class="card"><h3>⬆️ Upgrade '+BUILDINGS[b.type].name+" → "+d.name+'</h3><p class="cost">Cost: '+costText(d.cost)+'</p><div class="row"><button onclick="queueUpgrade('+b.id+",'"+up+'\')" '+(canAfford(d.cost)?"":"disabled")+">Upgrade</button></div></div>";
     });
-    if (S.era >= 3) h += '<div class="card"><h3>🏪 Market</h3><p>Sell 20 🪵 for 💰 12, or 15 🪨 for 💰 12.</p><div class="row"><button onclick="sellRes(\'wood\',20,12)">Sell wood</button><button onclick="sellRes(\'stone\',15,12)">Sell stone</button></div></div>';
-    P.innerHTML = h || '<div class="card"><p>Nothing to build yet.</p></div>';
+    if(S.era>=3)h+='<div class="card"><h3>🏪 Market</h3><p>Sell 20 🪵 for 💰 12, or 15 🪨 for 💰 12.</p><div class="row"><button onclick="sellRes(\'wood\',20,12)">Sell wood</button><button onclick="sellRes(\'stone\',15,12)">Sell stone</button></div></div>';
   }
-  if (tab === "research") {
-    let h = "";
-    const workers = alive().filter(p => p.job === "researcher");
-    const striking = (S.strikeToday || []).length;
-    h += '<div class="card"><h3>🔬 Research</h3><p>' + workers.length + " researcher(s)" + (striking ? ", " + striking + " out today 🥱" : "") + ". Progress is saved per project — switch any time, it never resets.</p></div>";
-    RESEARCH.forEach(r => {
-      if (r.era > S.era + 0 && !S.researchDone[r.id] && r.era !== S.era && r.toEra === undefined && r.era > S.era) { /* still show next era */ }
-      const done = S.researchDone[r.id];
-      const activeP = S.researchActive === r.id;
-      const saved = activeP ? S.researchProgress : (S.researchSaved[r.id] || 0);
-      const pct = Math.min(100, Math.round(saved / r.days * 100));
-      h += '<div class="card"><h3>' + (done ? "✅ " : activeP ? "🔬 " : "📄 ") + r.name + ' <span class="small">' + ERAS[r.era] + '</span></h3><p>' + r.desc + '</p>' +
-        (done ? "" : '<div class="bar"><i style="width:' + pct + '%"></i></div><p class="small">' + pct + "% · ~" + r.days + ' days of research</p><div class="row">' + (activeP ? '<button class="btn-alt" onclick="pauseResearch()">Pause</button>' : '<button onclick="startResearch(\'' + r.id + '\')">' + (saved > 0 ? "Resume" : "Research") + "</button>") + "</div>") + "</div>";
+  if(tab==="research"){
+    const w=alive().filter(p=>p.job==="researcher").length,st=(S.strikeToday||[]).length;
+    h+='<div class="card"><h3>🔬 Research</h3><p>'+w+" researcher(s)"+(st?", "+st+" out today 🥱":"")+". Progress is saved per project — switch any time.</p></div>";
+    RESEARCH.forEach(r=>{
+      const done=S.researchDone[r.id],act=S.researchActive===r.id,saved=act?S.researchProgress:(S.researchSaved[r.id]||0),pct=Math.min(100,Math.round(saved/r.days*100));
+      h+='<div class="card"><h3>'+(done?"✅ ":act?"🔬 ":"📄 ")+r.name+' <span class="small">'+ERAS[r.era]+"</span></h3><p>"+r.desc+"</p>"+
+        (done?"":'<div class="bar"><i style="width:'+pct+'%"></i></div><p class="small">'+pct+"% · ~"+r.days+' days</p><div class="row">'+(act?'<button class="btn-alt" onclick="pauseResearch()">Pause</button>':"<button onclick=\"startResearch('"+r.id+"')\">"+(saved>0?"Resume":"Research")+"</button>")+"</div>")+"</div>";
     });
-    P.innerHTML = h;
   }
-  if (tab === "jobs") {
-    let h = '<div class="card"><h3>💼 Jobs</h3><p>Villagers pick their own jobs. Flip on manual to set counts yourself with + / −.</p><div class="row"><button onclick="toggleManual()">' + (S.manualJobs ? "🤖 Back to automatic" : "✋ I'll set the jobs") + "</button></div>" + (hasB("school") ? "" : '<p class="small" style="margin-top:6px">🎓 No School yet — education is capped at Level 2.</p>') + "</div>";
-    Object.keys(JOBS).forEach(j => {
-      if (j === "student") return;
-      const d = JOBS[j];
-      const holders = alive().filter(p => p.job === j && p.age >= 18);
-      const locked = !jobAvailable(j);
-      h += '<div class="jobrow"><span>' + d.icon + " <b>" + d.name + "</b> · " + holders.length + '</span><span class="grow small">' + (locked ? "🔒 locked" : holders.map(p => esc(p.name) + " ⭐" + jobLevel(p, j)).join(", ")) + '</span>' + (S.manualJobs && !locked ? '<button class="pm" onclick="adjJob(\'' + j + '\',-1)">−</button><button class="pm" onclick="adjJob(\'' + j + '\',1)">+</button>' : "") + "</div>";
+  if(tab==="jobs"){
+    h='<div class="card"><h3>💼 Jobs</h3><p>Villagers pick their own jobs. Flip on manual to set counts with + / −.</p><div class="row"><button onclick="toggleManual()">'+(S.manualJobs?"🤖 Back to automatic":"✋ I'll set the jobs")+"</button></div>"+(hasB("school")?"":'<p class="small" style="margin-top:6px">🎓 No School yet — education is capped at Level 2.</p>')+"</div>";
+    Object.keys(JOBS).forEach(j=>{
+      if(j==="student")return;const d=JOBS[j],hold=alive().filter(p=>p.job===j&&p.age>=18),lock=!jobAvailable(j);
+      h+='<div class="jobrow"><span>'+d.icon+" <b>"+d.name+"</b> · "+hold.length+'</span><span class="grow small">'+(lock?"🔒 locked":hold.map(p=>esc(p.name)+" ⭐"+jobLevel(p,j)).join(", "))+"</span>"+(S.manualJobs&&!lock?'<button class="pm" onclick="adjJob(\''+j+'\',-1)">−</button><button class="pm" onclick="adjJob(\''+j+'\',1)">+</button>':"")+"</div>";
     });
-    P.innerHTML = h;
   }
-  if (tab === "people") {
-    if (selPerson) { const p = S.people.find(x => x.id === selPerson); if (p) { P.innerHTML = personCard(p); return; } selPerson = null; }
-    P.innerHTML = alive().concat(S.people.filter(p=>!p.alive)).map(p => '<div class="personrow"><span>' + (p.alive ? (p.age < 6 ? "👶" : p.age < 18 ? "🧒" : "🧑") : "🕯️") + '</span><span class="grow"><b>' + esc(p.name) + "</b> · age " + p.age + (p.alive ? " · " + (JOBS[p.job] ? JOBS[p.job].name : p.job) + " ⭐" + (p.age >= 18 ? jobLevel(p, p.job) : "—") + " · 🎓 Lv" + eduLevel(p) : " · passed") + '</span>' + (p.alive ? '<button class="btn-alt" onclick="selPerson=' + p.id + ';renderPanel()">View</button>' : "") + "</div>").join("");
+  if(tab==="people"){
+    const p=selPerson&&S.people.find(x=>x.id===selPerson);
+    if(p)h=personCard(p);else{selPerson=null;
+      h=alive().concat(S.people.filter(p=>!p.alive)).map(p=>'<div class="personrow"><span>'+(p.alive?(p.age<6?"👶":p.age<18?"🧒":"🧑"):"🕯️")+'</span><span class="grow"><b>'+esc(p.name)+"</b> · age "+p.age+(p.alive?" · "+(JOBS[p.job]?JOBS[p.job].name:p.job)+" ⭐"+(p.age>=18?jobLevel(p,p.job):"—")+" · 🎓 Lv"+eduLevel(p):" · passed")+"</span>"+(p.alive?'<button class="btn-alt" onclick="selPerson='+p.id+';renderPanel()">View</button>':"")+"</div>").join("")}
   }
-  if (tab === "quests") {
-    P.innerHTML = QUESTS.map((q, i) => '<div class="card" style="' + (i < S.questIdx ? "opacity:.65" : i === S.questIdx ? "border-color:#f59e0b" : "opacity:.45") + '"><h3>' + (i < S.questIdx ? "✅ " : i === S.questIdx ? "📜 " : "🔒 ") + q.name + '</h3><p>' + q.desc + '</p><p class="small">Reward: ' + costText(q.reward) + "</p></div>").join("");
-  }
-  if (tab === "log") {
-    P.innerHTML = '<div class="card"><h3>📖 Log</h3><p style="line-height:1.65">' + (S.log.length ? S.log.map(esc).join("<br>") : "Nothing yet.") + "</p></div>";
-  }
-  if (tab === "settings") {
-    P.innerHTML = '<div class="card"><h3>⚙️ Settings</h3>' +
-      '<p>City name</p><div class="row"><input type="text" id="cityNameIn" value="' + esc(S.cityName) + '"><button onclick="renameCity()">Save name</button></div>' +
-      '<p style="margin-top:10px">Game speed</p><div class="row"><button onclick="setSpeed(1)">1×</button><button onclick="setSpeed(2)">2×</button><button onclick="setSpeed(4)">4×</button><span class="small">now: ' + (S.speed||1) + '×</span></div>' +
-      '<p class="small" style="margin-top:10px">⏳ 1 day = 1 year · Raids every 10 years · Saves live in this browser.</p>' +
-      '<div class="row" style="margin-top:12px"><button class="btn-blue" onclick="backToFiles()">📁 Save files</button></div>' +
-      '<div class="row" style="margin-top:14px"><button class="btn-danger" onclick="restartCity()">🗑️ Restart this city</button></div></div>';
-  }
+  if(tab==="quests")h=QUESTS.map((q,i)=>'<div class="card" style="'+(i<S.questIdx?"opacity:.65":i===S.questIdx?"border-color:#f5b73b":"opacity:.45")+'"><h3>'+(i<S.questIdx?"✅ ":i===S.questIdx?"📜 ":"🔒 ")+q.name+"</h3><p>"+q.desc+'</p><p class="small">Reward: '+costText(q.reward)+"</p></div>").join("");
+  if(tab==="log")h='<div class="card"><h3>📖 Log</h3><p style="line-height:1.65">'+(S.log.length?S.log.map(esc).join("<br>"):"Nothing yet.")+"</p></div>";
+  if(tab==="settings")h='<div class="card"><h3>⚙️ Settings</h3><p>City name</p><div class="row"><input type="text" id="cityNameIn" value="'+esc(S.cityName)+'"><button onclick="renameCity()">Save name</button></div><p class="small" style="margin-top:10px">⏳ 1 day = 1 year · Raids every 10 years · Saves live in this browser.</p><div class="row" style="margin-top:12px"><button class="btn-blue" onclick="backToFiles()">📁 Save files</button></div><div class="row" style="margin-top:14px"><button class="btn-danger" onclick="restartCity()">🗑️ Restart this city</button></div></div>';
+  P.innerHTML=h||'<div class="card"><p>Nothing here yet.</p></div>';
 }
 function personCard(p){
-  const skills = Object.keys(p.skills || {}).filter(j => p.skills[j] > 0).sort((a,b) => p.skills[b]-p.skills[a]).slice(0,5).map(j => JOBS[j].icon + " " + JOBS[j].name + " ⭐" + jobLevel(p, j)).join("<br>");
-  return '<div class="card"><h3>' + esc(p.name) + '</h3><p>Age ' + p.age + " · " + (JOBS[p.job] ? JOBS[p.job].name : p.job) + (p.age >= 18 ? " ⭐ level " + jobLevel(p, p.job) : "") + "<br>🎓 Education: Lv" + eduLevel(p) + " " + eduName(eduLevel(p)) + " (" + Math.floor(p.edu) + "%)" +
-    (p.partner ? "<br>💕 Partner: " + esc((S.people.find(q=>q.id===p.partner)||{}).name || "?") : "") +
-    (p.religion ? "<br>🙏 " + esc(p.religion) : "") +
-    "<br>❤️ Health: " + Math.round(p.health) + "%" +
-    (skills ? "<br><br>⭐ <b>Job skills</b><br>" + skills : "") +
-    '<br><br><span class="small">Job levels grow by doing the job — talent and loving the job make XP faster. Levels are separate from education.</span></p><div class="row"><button class="btn-alt" onclick="selPerson=null;renderPanel()">← Back</button></div></div>';
+  const sk=Object.keys(p.skills||{}).filter(j=>p.skills[j]>0).sort((a,b)=>p.skills[b]-p.skills[a]).slice(0,5).map(j=>JOBS[j].icon+" "+JOBS[j].name+" ⭐"+jobLevel(p,j)).join("<br>");
+  return'<div class="card"><h3>'+esc(p.name)+"</h3><p>Age "+p.age+" · "+(JOBS[p.job]?JOBS[p.job].name:p.job)+(p.age>=18?" ⭐ level "+jobLevel(p,p.job):"")+"<br>🎓 Education: Lv"+eduLevel(p)+" "+eduName(eduLevel(p))+" ("+Math.floor(p.edu)+"%)"+
+    (p.partner?"<br>💕 Partner: "+esc((S.people.find(q=>q.id===p.partner)||{}).name||"?"):"")+(p.religion?"<br>🙏 "+esc(p.religion):"")+"<br>❤️ Health: "+Math.round(p.health)+"%"+(sk?"<br><br>⭐ <b>Job skills</b><br>"+sk:"")+
+    '</p><div class="row"><button class="btn-alt" onclick="selPerson=null;renderPanel()">← Back</button></div></div>';
 }
-/* ================= Actions ================= */
-function queueBuild(t){
-  const d = BUILDINGS[t]; if (!canAfford(d.cost)) { toast("Not enough resources"); return; }
-  payCost(d.cost);
-  // organized town: buildings line up in neat rows along three streets
-  const rows = [26, 44, 62], cols = [10, 21, 32, 43, 54, 65, 76, 87];
-  const taken = new Set(S.buildings.map(b => Math.round(b.x) + "," + Math.round(b.y)));
-  let spot = null;
-  for (const ry of rows) { for (const cx of cols) { if (!taken.has(cx + "," + ry)) { spot = [cx, ry]; break; } } if (spot) break; }
-  if (!spot) spot = [8 + (S.buildings.length * 7) % 84, rows[S.buildings.length % 3]];
-  S.buildings.push({ id: uidC++, type: t, x: spot[0], y: spot[1], building: true, progress: 0, tier: d.tier || 0 });
-  toast("🚧 " + d.name + " queued!"); if (!alive().some(p => p.job === "builder")) autoJobs(); saveGame(false); renderAll();
-}
-function queueUpgrade(id, up){
-  const b = S.buildings.find(x => x.id === id); const d = BUILDINGS[up]; if (!b || !canAfford(d.cost)) { toast("Not enough resources"); return; }
-  payCost(d.cost); b.type = up; b.building = true; b.progress = 0; b.tier = d.tier || 0;
-  toast("🚧 Upgrading to " + d.name + "!"); autoJobs(); saveGame(false); renderAll();
-}
-function sellRes(k, amt, price){ if ((S.res[k]||0) < amt) { toast("Not enough to sell"); return; } S.res[k] -= amt; S.res.money += price; toast("💰 Sold!"); saveGame(false); renderAll(); }
-function startResearch(id){ if (S.researchActive && S.researchActive !== id) S.researchSaved[S.researchActive] = S.researchProgress; S.researchActive = id; S.researchProgress = S.researchSaved[id] || 0; autoJobs(); saveGame(false); renderPanel(); }
-function pauseResearch(){ if (S.researchActive) { S.researchSaved[S.researchActive] = S.researchProgress; S.researchActive = null; } saveGame(false); renderPanel(); }
-function toggleManual(){ S.manualJobs = !S.manualJobs; if (S.manualJobs) { S.jobCounts = {}; Object.keys(JOBS).forEach(j => S.jobCounts[j] = alive().filter(p=>p.job===j && p.age>=18).length); } else autoJobs(); saveGame(false); renderPanel(); }
-function adjJob(j, d){ S.jobCounts[j] = Math.max(0, (S.jobCounts[j]||0) + d); applyManualJobs(); saveGame(false); renderPanel(); }
-function setSpeed(v){ S.speed = v; saveGame(false); renderPanel(); }
-function renameCity(){ const v = $("cityNameIn").value.trim(); if (v) { S.cityName = v; toast("Renamed to " + v); } saveGame(false); renderAll(); }
-function restartCity(){ if (!confirm("Restart this city from Year 1? This wipes this file.")) return; const name = S.cityName; S = newGame(name); saveGame(false); renderAll(); toast("Fresh start!"); }
-function backToFiles(){ saveGame(false); stopLoop(); S = null; activeSlot = -1; showFiles(); }
 
-/* ================= Files screen ================= */
+/* ---------- actions ---------- */
+function queueBuild(t){
+  const d=BUILDINGS[t];if(!canAfford(d.cost)){toast("Not enough resources");return}payCost(d.cost);
+  const rows=[26,44,62],cols=[10,21,32,43,54,65,76,87],taken=new Set(S.buildings.map(b=>Math.round(b.x)+","+Math.round(b.y)));let spot=null;
+  for(const ry of rows){for(const cx of cols)if(!taken.has(cx+","+ry)){spot=[cx,ry];break}if(spot)break}
+  if(!spot)spot=[8+(S.buildings.length*7)%84,rows[S.buildings.length%3]];
+  S.buildings.push({id:uidC++,type:t,x:spot[0],y:spot[1],building:true,progress:0,tier:d.tier||0});
+  toast("🚧 "+d.name+" queued!");autoJobs();saveGame(false);renderAll();
+}
+function queueUpgrade(id,up){
+  const b=S.buildings.find(x=>x.id===id),d=BUILDINGS[up];if(!b||!canAfford(d.cost)){toast("Not enough resources");return}
+  payCost(d.cost);b.type=up;b.building=true;b.progress=0;b.tier=d.tier||0;toast("🚧 Upgrading to "+d.name+"!");autoJobs();saveGame(false);renderAll();
+}
+function sellRes(k,a,pr){if((S.res[k]||0)<a){toast("Not enough to sell");return}S.res[k]-=a;S.res.money+=pr;toast("💰 Sold!");saveGame(false);renderAll()}
+function startResearch(id){if(S.researchActive&&S.researchActive!==id)S.researchSaved[S.researchActive]=S.researchProgress;S.researchActive=id;S.researchProgress=S.researchSaved[id]||0;autoJobs();saveGame(false);renderPanel()}
+function pauseResearch(){if(S.researchActive){S.researchSaved[S.researchActive]=S.researchProgress;S.researchActive=null}autoJobs();saveGame(false);renderPanel()}
+function toggleManual(){S.manualJobs=!S.manualJobs;if(S.manualJobs){S.jobCounts={};Object.keys(JOBS).forEach(j=>S.jobCounts[j]=alive().filter(p=>p.job===j&&p.age>=18).length)}else autoJobs();saveGame(false);renderPanel()}
+function adjJob(j,d){S.jobCounts[j]=Math.max(0,(S.jobCounts[j]||0)+d);applyManualJobs();saveGame(false);renderPanel()}
+function setSpeed(v){if(v===0)S.paused=true;else{S.paused=false;S.speed=v;lastTick=performance.now()}saveGame(false);renderHud()}
+function renameCity(){const v=$("cityNameIn").value.trim();if(v){S.cityName=v;toast("Renamed to "+v)}saveGame(false);renderAll()}
+function restartCity(){if(!confirm("Restart this city from Year 1? This wipes this file."))return;const n=S.cityName;S=newGame(n);personEls.forEach(e=>e.remove());bldgEls.forEach(e=>e.remove());personEls.clear();bldgEls.clear();saveGame(false);renderAll();toast("Fresh start!")}
+function backToFiles(){saveGame(false);stopLoop();S=null;activeSlot=-1;document.body.classList.remove("sheet-open");showFiles()}
+function zoomIn(){view.z=Math.min(2.5,view.z*1.2);applyView()}
+function zoomOut(){view.z=Math.max(.6,view.z/1.2);applyView()}
+function resetView(){view={z:1,x:0,y:0};applyView()}
+
+/* ---------- files screen ---------- */
 function showFiles(){
-  $("gameScreen").style.display = "none"; $("filesScreen").style.display = "block";
-  $("slots").innerHTML = store.slots.map((s, i) => {
-    if (!s) return '<div class="slot"><div class="slot-title"><span class="filepill">FILE ' + (i+1) + '</span> Empty</div><div class="slot-meta">Start a brand-new city in this file</div><div class="row"><input type="text" id="cityIn' + i + '" placeholder="Name your city"><button onclick="startNew(' + i + ')">▶ Start</button></div></div>';
-    const st = s.state;
-    return '<div class="slot"><div class="slot-title"><span class="filepill">' + esc(s.fileName.toUpperCase()) + '</span> ' + esc(st.cityName) + '</div><div class="slot-meta">Year ' + st.year + " · " + ERAS[st.era] + " · 👥 " + st.people.filter(p=>p.alive).length + " people · saved " + new Date(s.savedAt).toLocaleString() + '</div><div class="row"><button onclick="loadSlot(' + i + ')">▶ Load</button><input type="text" id="fileIn' + i + '" placeholder="Rename this file" value="' + esc(s.fileName) + '"><button class="btn-alt" onclick="renameSlot(' + i + ')">Rename</button><button class="btn-danger" onclick="deleteSlot(' + i + ')">Delete</button></div></div>';
+  $("gameScreen").style.display="none";$("filesScreen").style.display="block";
+  $("slots").innerHTML=store.slots.map((s,i)=>{
+    if(!s)return'<div class="slot"><div class="slot-title"><span class="filepill">FILE '+(i+1)+'</span> Empty</div><div class="slot-meta">Start a brand-new city in this file</div><div class="row"><input type="text" id="cityIn'+i+'" placeholder="Name your city"><button onclick="startNew('+i+')">▶ Start</button></div></div>';
+    const st=s.state;
+    return'<div class="slot"><div class="slot-title"><span class="filepill">'+esc(s.fileName.toUpperCase())+"</span> "+esc(st.cityName)+'</div><div class="slot-meta">Year '+st.year+" · "+ERAS[st.era]+" · 👥 "+st.people.filter(p=>p.alive).length+" people · saved "+new Date(s.savedAt).toLocaleString()+'</div><div class="row"><button onclick="loadSlot('+i+')">▶ Load</button><input type="text" id="fileIn'+i+'" placeholder="Rename this file" value="'+esc(s.fileName)+'"><button class="btn-alt" onclick="renameSlot('+i+')">Rename</button><button class="btn-danger" onclick="deleteSlot('+i+')">Delete</button></div></div>';
   }).join("");
 }
-function startNew(i){ const v = ($("cityIn" + i).value || "").trim() || "New City"; activeSlot = i; S = newGame(v); store.slots[i] = { fileName: "File " + (i+1), savedAt: Date.now(), state: S }; saveStore(); enterGame(); }
-function loadSlot(i){ const s = store.slots[i]; if (!s) return; activeSlot = i; S = s.state; uidC = 10000 + Math.floor(Math.random()*1000) + S.year; enterGame(); }
-function renameSlot(i){ const v = ($("fileIn" + i).value || "").trim(); if (v && store.slots[i]) { store.slots[i].fileName = v; saveStore(); } showFiles(); }
-function deleteSlot(i){ if (!confirm("Delete File " + (i+1) + "? This can't be undone.")) return; store.slots[i] = null; saveStore(); showFiles(); }
+function startNew(i){const v=($("cityIn"+i).value||"").trim()||"New City";activeSlot=i;S=newGame(v);store.slots[i]={fileName:"File "+(i+1),savedAt:Date.now(),state:S};saveStore();enterGame()}
+function loadSlot(i){const s=store.slots[i];if(!s)return;activeSlot=i;S=s.state;S.paused=false;uidC=10000+Math.floor(Math.random()*1000)+S.year;enterGame()}
+function renameSlot(i){const v=($("fileIn"+i).value||"").trim();if(v&&store.slots[i]){store.slots[i].fileName=v;saveStore()}showFiles()}
+function deleteSlot(i){if(!confirm("Delete File "+(i+1)+"? This can't be undone."))return;store.slots[i]=null;saveStore();showFiles()}
 function enterGame(){
-  $("filesScreen").style.display = "none"; $("gameScreen").style.display = "block";
-  personEls.clear(); bldgEls.clear(); $("mapWrap").innerHTML = ""; if (typeof view !== "undefined") view = { z: 1, x: 0, y: 0 };
-  // religions arrive in the modern era
-  alive().forEach(p => { if (S.era >= 3 && !p.religion) p.religion = RELIGIONS[Math.floor(Math.random()*RELIGIONS.length)]; });
-  tab = "build"; renderAll(); startLoop();
+  $("filesScreen").style.display="none";$("gameScreen").style.display="block";
+  personEls.clear();bldgEls.clear();$("mapWrap").innerHTML="";view={z:1,x:0,y:0};prodCache=null;lastResHtml="";
+  alive().forEach(p=>{if(S.era>=3&&!p.religion)p.religion=RELIGIONS[Math.floor(Math.random()*RELIGIONS.length)]});
+  tab="build";document.body.classList.remove("sheet-open");renderAll();startLoop();
 }
-let view = { z: 1, x: 0, y: 0 };
-function applyView(){ const w = $("world"); if (w) w.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.z + ")"; }
-function zoomIn(){ view.z = Math.min(2.5, view.z * 1.2); applyView(); }
-function zoomOut(){ view.z = Math.max(0.6, view.z / 1.2); applyView(); }
-function resetView(){ view = { z: 1, x: 0, y: 0 }; applyView(); }
-(function(){ const mw = $("mapWrap"); let drag = null;
-  mw.addEventListener("pointerdown", e => { if (e.target.closest("#mapBtns")) return; drag = { sx: e.clientX, sy: e.clientY, x: view.x, y: view.y }; });
-  mw.addEventListener("pointermove", e => { if (!drag) return; view.x = drag.x + (e.clientX - drag.sx); view.y = drag.y + (e.clientY - drag.sy); applyView(); });
-  window.addEventListener("pointerup", () => { drag = null; });
-  mw.addEventListener("wheel", e => { e.preventDefault(); view.z = Math.max(0.6, Math.min(2.5, view.z * (e.deltaY < 0 ? 1.1 : 0.9))); applyView(); }, { passive: false });
+(function(){
+  const mw=$("mapWrap");let drag=null;
+  mw.addEventListener("pointerdown",e=>{document.body.classList.remove("sheet-open");renderPanel();if(e.target.closest("#mapBtns"))return;drag={sx:e.clientX,sy:e.clientY,x:view.x,y:view.y}});
+  mw.addEventListener("pointermove",e=>{if(!drag)return;view.x=drag.x+e.clientX-drag.sx;view.y=drag.y+e.clientY-drag.sy;applyView()});
+  window.addEventListener("pointerup",()=>{drag=null});
+  mw.addEventListener("wheel",e=>{e.preventDefault();view.z=Math.max(.6,Math.min(2.5,view.z*(e.deltaY<0?1.1:.9)));applyView()},{passive:false});
 })();
-document.querySelectorAll("#tabbar button").forEach(b => b.addEventListener("click", () => { tab = b.dataset.tab; selPerson = null; renderPanel(); }));
+document.querySelectorAll("#tabbar button").forEach(b=>b.addEventListener("click",()=>{
+  const same=tab===b.dataset.tab,open=document.body.classList.contains("sheet-open");
+  tab=b.dataset.tab;selPerson=null;document.body.classList.toggle("sheet-open",!(same&&open));renderPanel();
+}));
 showFiles();
 </script>
 </body>
